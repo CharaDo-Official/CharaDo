@@ -3,13 +3,13 @@
 
 <svg
    width="480"
-   height="150"
-   viewBox="0 0 127 39.687483"
+   height="80"
+   viewBox="0 0 127 21.166658"
    version="1.1"
    id="svg1"
    inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
    sodipodi:docname="タスク.svg"
-   inkscape:export-filename="タスク_状態提案.png"
+   inkscape:export-filename="タスク.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -27,8 +27,8 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="2.0000001"
-     inkscape:cx="224.74999"
-     inkscape:cy="66.249998"
+     inkscape:cx="225.74999"
+     inkscape:cy="66.249997"
      inkscape:window-width="1920"
      inkscape:window-height="1009"
      inkscape:window-x="-8"
@@ -105,7 +105,7 @@
      inkscape:groupmode="layer"
      id="g13"
      inkscape:label="タスク"
-     transform="translate(-250.52549,-116.30624)"
+     transform="translate(-250.52549,-118.15832)"
      style="display:inline">
     <rect
        style="fill:#000000;fill-opacity:0.503198;stroke-width:1.00437;filter:url(#filter18)"
@@ -169,7 +169,7 @@
          id="tspan8"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:4.23333px;font-family:'Noto Sans JP';-inkscape-font-specification:'Noto Sans JP';fill:#000000;fill-opacity:1;stroke-width:1"
          x="272.40872"
-         y="126.56512">提案</tspan></text>
+         y="126.56512">タスクタイトル</tspan></text>
     <rect
        style="display:none;fill:#f9b34e;fill-opacity:1;stroke-width:0.777791"
        id="rect19"
@@ -180,7 +180,7 @@
        inkscape:label="重要度"
        ry="0.44461542" />
     <rect
-       style="display:inline;fill:#a7d4ff;fill-opacity:1;stroke-width:0.436151"
+       style="display:inline;fill:#f9b34e;fill-opacity:1;stroke-width:0.436151"
        id="rect1"
        width="1.0092698"
        height="4.3889713"
@@ -198,12 +198,12 @@
          style="fill:#414141;fill-opacity:1">
         <polygon
            class="st0"
-           points="335.644,414.285 53.466,414.285 53.466,132.107 291.098,132.107 344.564,78.64 0,78.64 0,467.751 389.106,467.751 389.106,441.018 389.106,323.746 335.644,377.213 "
+           points="389.106,467.751 389.106,441.018 389.106,323.746 335.644,377.213 335.644,414.285 53.466,414.285 53.466,132.107 291.098,132.107 344.564,78.64 0,78.64 0,467.751 "
            style="fill:#414141;fill-opacity:1"
            id="polygon8" />
         <polygon
            class="st0"
-           points="248.431,252.823 158.903,163.312 103.914,218.311 193.434,307.822 248.423,362.82 303.412,307.822 512,99.247 457.002,44.249 "
+           points="457.002,44.249 248.431,252.823 158.903,163.312 103.914,218.311 193.434,307.822 248.423,362.82 303.412,307.822 512,99.247 "
            style="fill:#414141;fill-opacity:1"
            id="polygon9" />
       </g>
@@ -271,7 +271,8 @@
        inkscape:groupmode="layer"
        id="layer2"
        inkscape:label="期日"
-       transform="translate(250.52549,116.30624)">
+       transform="translate(250.52549,116.30624)"
+       style="display:none">
       <text
          xml:space="preserve"
          style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:'Noto Sans JP';-inkscape-font-specification:'Noto Sans JP';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;display:inline;fill:#000000;fill-opacity:1;stroke-width:1"
@@ -288,24 +289,25 @@
          d="m 24.6797,16.704119 h -0.10555 v 0.17835 c 0,0.16095 -0.14377,0.29184 -0.32048,0.29184 -0.17675,0 -0.32052,-0.13089 -0.32052,-0.29184 v -0.17835 h -0.61694 v 0.17835 c 0,0.16095 -0.14377,0.29184 -0.32048,0.29184 -0.17676,0 -0.32052,-0.13089 -0.32052,-0.29184 v -0.17835 h -0.10555 c -0.22688,0 -0.41081,0.16747 -0.41081,0.37404 v 1.77568 c 0,0.20657 0.18393,0.37403 0.41081,0.37403 h 2.11004 c 0.22688,0 0.41081,-0.16746 0.41081,-0.37403 v -1.77568 c 0,-0.20657 -0.18394,-0.37404 -0.41081,-0.37404 z m 0.0875,2.08404 c 0,0.0956 -0.0854,0.17334 -0.19037,0.17334 h -1.90431 c -0.10496,0 -0.19036,-0.0778 -0.19036,-0.17334 v -1.38924 h 2.28504 z"
          style="display:inline;fill:#000000;stroke-width:0.00561889"
          id="path3" />
-      <text
-         xml:space="preserve"
-         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:'Noto Sans JP';-inkscape-font-specification:'Noto Sans JP';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;display:inline;fill:#666666;fill-opacity:1;stroke-width:1"
-         x="21.762173"
-         y="14.279382"
-         id="text1"><tspan
-           sodipodi:role="line"
-           id="tspan1"
-           style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:'Noto Sans JP';-inkscape-font-specification:'Noto Sans JP';fill:#666666;fill-opacity:1;stroke-width:1"
-           x="21.762173"
-           y="14.279382">提案の場合は色が青に(直接追加不可能なものは青色)</tspan></text>
     </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:'Noto Sans JP';-inkscape-font-specification:'Noto Sans JP';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;display:none;fill:#666666;fill-opacity:1;stroke-width:1"
+       x="21.762173"
+       y="14.279382"
+       id="text1"
+       transform="translate(250.52549,116.30624)"><tspan
+         sodipodi:role="line"
+         id="tspan1"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:2.82222px;font-family:'Noto Sans JP';-inkscape-font-specification:'Noto Sans JP';fill:#666666;fill-opacity:1;stroke-width:1"
+         x="0"
+         y="0">提案の場合は色が青に(直接追加不可能なものは青色)</tspan></text>
   </g>
   <g
      inkscape:groupmode="layer"
      id="layer1"
      inkscape:label="進行中"
-     style="display:inline">
+     style="display:none">
     <rect
        style="display:inline;fill:#a7d4ff;fill-opacity:1;stroke-width:1.03292"
        id="rect50"
@@ -358,12 +360,12 @@
          style="fill:#414141;fill-opacity:1">
         <polygon
            class="st0"
-           points="389.106,441.018 389.106,323.746 335.644,377.213 335.644,414.285 53.466,414.285 53.466,132.107 291.098,132.107 344.564,78.64 0,78.64 0,467.751 389.106,467.751 "
+           points="291.098,132.107 344.564,78.64 0,78.64 0,467.751 389.106,467.751 389.106,441.018 389.106,323.746 335.644,377.213 335.644,414.285 53.466,414.285 53.466,132.107 "
            style="fill:#414141;fill-opacity:1"
            id="polygon8-4" />
         <polygon
            class="st0"
-           points="248.431,252.823 158.903,163.312 103.914,218.311 193.434,307.822 248.423,362.82 303.412,307.822 512,99.247 457.002,44.249 "
+           points="512,99.247 457.002,44.249 248.431,252.823 158.903,163.312 103.914,218.311 193.434,307.822 248.423,362.82 303.412,307.822 "
            style="fill:#414141;fill-opacity:1"
            id="polygon9-5" />
       </g>
@@ -528,12 +530,12 @@
          style="fill:#414141;fill-opacity:1">
         <polygon
            class="st0"
-           points="335.644,414.285 53.466,414.285 53.466,132.107 291.098,132.107 344.564,78.64 0,78.64 0,467.751 389.106,467.751 389.106,441.018 389.106,323.746 335.644,377.213 "
+           points="0,467.751 389.106,467.751 389.106,441.018 389.106,323.746 335.644,377.213 335.644,414.285 53.466,414.285 53.466,132.107 291.098,132.107 344.564,78.64 0,78.64 "
            style="fill:#414141;fill-opacity:1"
            id="polygon15" />
         <polygon
            class="st0"
-           points="248.431,252.823 158.903,163.312 103.914,218.311 193.434,307.822 248.423,362.82 303.412,307.822 512,99.247 457.002,44.249 "
+           points="512,99.247 457.002,44.249 248.431,252.823 158.903,163.312 103.914,218.311 193.434,307.822 248.423,362.82 303.412,307.822 "
            style="fill:#414141;fill-opacity:1"
            id="polygon16" />
       </g>
