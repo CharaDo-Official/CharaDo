@@ -1,0 +1,4 @@
+/* コンテンツ幅を拡張 */
+.md-main__inner {
+  max-width: 1600px;
+}

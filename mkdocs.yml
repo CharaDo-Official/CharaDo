@@ -36,15 +36,7 @@ theme:
   palette:
     primary: indigo
     accent: indigo
-
-# プラグイン
-plugins:
-  - search
-  - git-revision-date # gitから更新日時を取得表示
-
-features:
-  - search.suggest         ## 検索の候補リスト表示を表示する
-  - search.highlight       ## 検索で一致した結果をハイライトする
+  features:
   ## - navigation.instant     ## mkdocs for MaterialのSPA対応 # SPAだとlive-editが効かないので無効化
   - navigation.tabs        ## トップレベル項目を画面上部メニューにタブ表示
   ##- navigation.sections  ## 項目のセクション表示 
@@ -56,5 +48,14 @@ features:
   - search.suggest         ## 検索の候補リスト表示を表示する
   - search.highlight       ## 検索で一致した結果をハイライトする
   - content.code.copy      ## コードコピー機能
+
+# プラグイン
+plugins:
+  - search
+  - git-revision-date # gitから更新日時を取得表示
+
+
+extra_css:
+  - stylesheets/extra.css
 
 
