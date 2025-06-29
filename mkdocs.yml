@@ -1,0 +1,22 @@
+site_name: "CharaDoAppドキュメント"        # サイトタイトル
+site_description: "プロジェクトのドキュメント"
+site_url: https://github.com/CharaDo-Official/AppDocument
+
+# ナビゲーション（目次）構成
+nav:
+  - Home: index.md
+  #- 要件定義: 01_Requirements.md
+  #- 設計仕様: 02_Design_Spec.md
+
+# テーマ設定（必要に応じてカスタマイズ可）
+theme:
+  name: material
+  logo: img/logo.png
+  favicon: img/favicon.ico
+  palette:
+    primary: indigo
+    accent: indigo
+
+# プラグイン例（目次自動生成など）
+plugins:
+  - search
