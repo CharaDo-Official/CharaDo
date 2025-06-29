@@ -5,18 +5,56 @@ site_url: https://github.com/CharaDo-Official/AppDocument
 # ナビゲーション（目次）構成
 nav:
   - Home: index.md
-  #- 要件定義: 01_Requirements.md
-  #- 設計仕様: 02_Design_Spec.md
+  - 要件: # 00_requirement
+    - 機能・非機能: 00_requirement/00_functions.md
+    - 拡張性: 00_requirement/10_extensibility.md
+    - ユースケース: 00_requirement/20_usecase.md
 
-# テーマ設定（必要に応じてカスタマイズ可）
+  - UI設計: # 10_design
+    - 画面一覧: 10_design/00_index.md
+    - タスク画面: 10_design/10_task.md
+    - タスク詳細モーダル: 10_design/20_task_edit.md
+    - データ画面: 10_design/30_data.md
+    - キャラ画面: 10_design/40_character.md
+    - キャラ詳細モーダル: 10_design/50_character_edit.md
+    - プラン画面: 10_design/60_plan.md
+    - 上部メニュー: 10_design/70_top_menu.md
+    - 設定モーダル: 10_design/75_setting.md
+    - フロー画面: 10_design/80_flow.md
+    - デバッグ画面: 10_design/99_debug.md
+
+  - データ設計: # 20_data
+    - データ構造: 20_data/00_structure.md
+    - 保存形式: 20_data/10_format.md
+
+
+# テーマ設定
 theme:
   name: material
-  logo: img/logo.png
-  favicon: img/favicon.ico
+  logo: logo/logo.png
+  favicon: logo/favicon.ico
   palette:
     primary: indigo
     accent: indigo
 
-# プラグイン例（目次自動生成など）
+# プラグイン
 plugins:
   - search
+  - git-revision-date # gitから更新日時を取得表示
+
+features:
+  - search.suggest         ## 検索の候補リスト表示を表示する
+  - search.highlight       ## 検索で一致した結果をハイライトする
+  ## - navigation.instant     ## mkdocs for MaterialのSPA対応 # SPAだとlive-editが効かないので無効化
+  - navigation.tabs        ## トップレベル項目を画面上部メニューにタブ表示
+  ##- navigation.sections  ## 項目のセクション表示 
+  ##- navigation.expand    ## 初期表示で全てのページ展開を有効化
+  - navigation.top         ## ページTOP遷移ボタンを有効化
+  - navigation.path        ## パンくずリスト　動かない？
+  ## - toc.integrate       ## 画面左右のメニューを統合
+  - header.autohide        ## スクロールしたときヘッダーを自動的に非表示にする
+  - search.suggest         ## 検索の候補リスト表示を表示する
+  - search.highlight       ## 検索で一致した結果をハイライトする
+  - content.code.copy      ## コードコピー機能
+
+
