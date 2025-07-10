@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="480"
+   height="100"
+   viewBox="0 0 127 26.458333"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (f4327f4, 2025-05-13)"
+   sodipodi:docname="タスク作成.svg"
+   inkscape:export-filename="入力中.png"
+   inkscape:export-xdpi="96"
+   inkscape:export-ydpi="96"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     inkscape:zoom="1.4378367"
+     inkscape:cx="281.32541"
+     inkscape:cy="53.900419"
+     inkscape:window-width="1920"
+     inkscape:window-height="1009"
+     inkscape:window-x="-8"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer10" />
+  <defs
+     id="defs1" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer10"
+     inkscape:label="ToDoの追加場所"
+     style="display:inline"
+     transform="translate(-0.93257126,-53.004174)">
+    <rect
+       style="fill:#ffffff;fill-opacity:1;stroke-width:0.2;stroke:#f9b34e;stroke-opacity:1;stroke-dasharray:none"
+       id="rect38"
+       width="113.59316"
+       height="11.71065"
+       x="8.6548023"
+       y="60.787518"
+       ry="0"
+       inkscape:label="追加場所" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'Noto Sans JP';-inkscape-font-specification:'Noto Sans JP';text-align:start;writing-mode:lr-tb;direction:ltr;text-anchor:start;fill:#333333;fill-opacity:1;stroke-width:1"
+       x="12.637576"
+       y="68.09111"
+       id="text39"><tspan
+         sodipodi:role="line"
+         id="tspan39"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:3.52778px;font-family:'Noto Sans JP';-inkscape-font-specification:'Noto Sans JP';fill:#333333;fill-opacity:1;stroke-width:1"
+         x="12.637576"
+         y="68.09111">入力タスク名、とりあえず改行なしで横にずれるタイプかな|</tspan></text>
+  </g>
+</svg>
