@@ -28,6 +28,8 @@
 ### その他
 - アイコン
 [ICOON MONO](https://icooon-mono.com/)
+- designer フォント
+noto sans を使用
 
 ## id:10 [タスク画面](10_task.md)
 メイン画面。タスクの追加・管理を行う。
