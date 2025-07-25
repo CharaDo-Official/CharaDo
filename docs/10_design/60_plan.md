@@ -1,5 +1,5 @@
 # id:60 プラン画面
-![alt text](../designer/画面例/プラン画面.png)
+![alt text](../designer/コンポーネント図/コンポーネント図.png)
 
 ## 構成コンポーネント
 - 無料プラン #id60-10
