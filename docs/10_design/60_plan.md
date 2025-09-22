@@ -20,7 +20,7 @@
     - 詳細 #id60-50-20
 
 ※決済画面への遷移  
-ストアページにリダイレクト(Steamoverlay) or 購入アイテムを指定して直接決済画面を表示する(Steam Microtransaction API)  
+RustでStoreContext APIを呼び出せば、アドオン購入UIに飛べるかも(ChatGPT調べ)
 
 ## 基本機能 id:60
 |id 	|前提状態	|操作 	|結果	|
