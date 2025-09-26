@@ -1,0 +1,39 @@
+.button {
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+/* 主ボタン */
+.primary {
+  background-color: #3b82f6; /* Tailwindのblue-500相当 */
+  color: white;
+}
+
+.primary:hover {
+  background-color: #2563eb; /* blue-600相当 */
+  transform: translateY(-1px);
+}
+
+/* 副ボタン */
+.secondary {
+  background-color: #e5e7eb; /* gray-200相当 */
+  color: #374151; /* gray-700 */
+}
+
+.secondary:hover {
+  background-color: #d1d5db; /* gray-300 */
+  transform: translateY(-1px);
+}
+
+/* 無効状態 */
+.disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
+}
