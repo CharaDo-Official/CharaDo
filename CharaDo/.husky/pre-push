@@ -1,0 +1,6 @@
+#!/bin/sh
+
+cd CharaDo
+
+npm run lint
+yarn jest
