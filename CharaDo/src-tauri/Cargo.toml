@@ -1,9 +1,11 @@
 [package]
 name = "charado"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
+description = "A ToDo with cute character app"
+authors = ["CFEEL"]
 edition = "2021"
+license = "MIT"
+repository = "https://github.com/CharaDo-Official/CharaDo"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
