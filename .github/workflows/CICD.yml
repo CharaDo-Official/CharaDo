@@ -1,0 +1,83 @@
+name: CI/CD
+
+# 要相談
+on:
+	# プルリクのみ
+  pull_request:
+    branches: [ main, dev ]
+  workflow_dispatch:
+
+#ディレクトリ構成に応じて変更してください
+env:
+  TAURI_APP: CharaDo
+  TAURI_SRC: CharaDo/src-tauri
+
+#PR番号が被ったとき、古いActionsを自動停止してくれるらしい
+concurrency:
+  group: tauri-build-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build-msi:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Node
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22.18.0
+          cache: 'npm'
+          cache-dependency-path: ${{ env.TAURI_APP }}/package-lock.json
+      
+      # Rust
+      - uses: dtolnay/rust-toolchain@stable
+
+      # node_modules
+      - name: install node modules
+        run: npm ci
+        working-directory: ${{ env.TAURI_APP }}
+      
+      # ESLint
+      - name: run ESLint
+        run: npm run lint
+        working-directory: ${{ env.TAURI_APP }}
+      
+      # Tauri/Rust
+      - name: rustc version
+        id: rustc
+        shell: pwsh
+        run: echo "version=$((rustc -V) -replace '\s+', '_')" >> $env:GITHUB_OUTPUT
+
+      - name: cache cargo registry/git
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+          key: ${{ runner.os }}-cargo-${{ steps.rustc.outputs.version }}-${{ hashFiles('**/Cargo.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-${{ steps.rustc.outputs.version }}-
+            ${{ runner.os }}-cargo-
+
+      - name: cache cargo target
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.TAURI_SRC }}/target
+          key: ${{ runner.os }}-cargo-target-${{ steps.rustc.outputs.version }}-${{ hashFiles(format('{0}/Cargo.lock', env.TAURI_SRC)) }}
+          restore-keys: |
+            ${{ runner.os }}-cargo-target-${{ steps.rustc.outputs.version }}-
+            ${{ runner.os }}-cargo-target-
+
+      - name: tauri-build
+        run: >
+          npm run tauri build
+        working-directory: ${{ env.TAURI_APP }}
+
+      # .msiアップロード
+      - name: upload-msi
+        uses: actions/upload-artifact@v4
+        with:
+          name: tauri-proto
+          path: ${{ env.TAURI_SRC }}/target/**/bundle/msi/*.msi
+          if-no-files-found: error
