@@ -3,7 +3,7 @@ name: CI/CD
 # 要相談
 on:
   pull_request:
-    branches: [ main, dev ]
+    branches: [ main ]
   workflow_dispatch:
 
 #ディレクトリ構成に応じて変更してください
