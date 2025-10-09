@@ -2,7 +2,6 @@ name: CI/CD
 
 # 要相談
 on:
-	# プルリクのみ
   pull_request:
     branches: [ main, dev ]
   workflow_dispatch:
