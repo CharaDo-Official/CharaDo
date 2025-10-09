@@ -9,7 +9,8 @@
     "preview": "vite preview",
     "tauri": "tauri",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix"
+    "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
+		"prepare": "powershell -ExecutionPolicy Bypass ./ci/setup-hooks.ps1"
   },
   "dependencies": {
     "@tauri-apps/api": "^2",
