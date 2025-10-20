@@ -32,4 +32,6 @@ thiserror = "1.0"
 # logger
 log = "0.4"
 tauri-plugin-log = "2"
+# AppLocalData
+dirs-next = "2"
 
