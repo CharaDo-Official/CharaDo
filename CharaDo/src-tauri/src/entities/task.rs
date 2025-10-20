@@ -22,6 +22,8 @@ pub struct Task {
   importance: Importance,
   /// ステータス
   status: Status,
+	/// 表示順
+	display_order: u32,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
@@ -41,7 +43,7 @@ pub enum Status {
 }
 
 impl Task {
-  pub fn create(id: u32, title: String) -> Task {
+  pub fn new(id: u32, title: String) -> Task {
     Task {
       id,
       title,
@@ -51,6 +53,7 @@ impl Task {
       out_cast_date: None,
       importance: Importance::Normal,
       status: Status::ToDo,
+			display_order: id,
     }
   }
 

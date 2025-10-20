@@ -25,7 +25,7 @@ fn lib_main() {
   let mut task_repo: JsonRepository<Task> = JsonRepository::connect(&(path.join("tasks.json"))).unwrap();
 
   // テスト用タスク追加
-  let task = Task::create(0, "test3".to_string());
+  let task = Task::new(0, "test3".to_string());
   task_repo.add(task).unwrap();
 }
 

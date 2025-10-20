@@ -5,7 +5,7 @@ use serde::{Deserialize, Serialize};
 use crate::entities::HasId;
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
-/// タスクを表す構造体
+/// キャラクタを表す構造体
 pub struct Character {
 	/// キャラクターID
 	id: u32,
