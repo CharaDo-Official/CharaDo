@@ -2,7 +2,9 @@ use std::path::PathBuf;
 
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+use crate::entities::HasId;
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
 /// タスクを表す構造体
 pub struct Character {
 	/// キャラクターID
@@ -21,13 +23,13 @@ pub struct Character {
 	author: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub enum AnimationKind {
 	Image,
 	Movie,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 struct Animation {
 	/// アニメーションファイルのパス
 	path: PathBuf,
@@ -35,7 +37,7 @@ struct Animation {
 	kind: AnimationKind,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct NecessaryAnimation {
 	/// 通常時アニメーション
 	usual: Animation,
@@ -47,7 +49,7 @@ pub struct NecessaryAnimation {
 	on_stage: Animation,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct OptionalAnimation {
 	/// 退場時アニメーション
 	off_stage: Option<Animation>,
@@ -55,7 +57,7 @@ pub struct OptionalAnimation {
 	touch: Option<Animation>,
 }
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Dialogue {
 	usual: Option<String>,
 	addition: Option<String>,
@@ -63,4 +65,35 @@ pub struct Dialogue {
 	on_stage: Option<String>,
 	off_stage: Option<String>,
 	touch: Option<String>,
+}
+
+
+impl Character {
+	pub fn new(id: u32,
+					name: String,
+					description: String,
+					necessary_animation: NecessaryAnimation,
+					optional_animations: OptionalAnimation,
+					dialogues: Dialogue,
+					author: Option<String>) -> Self {
+		Character {
+			id,
+			name,
+			description,
+			necessary_animation,
+			optional_animations,
+			dialogues,
+			author,
+		}
+	}
+}
+
+impl HasId for Character {
+	fn get_id(&self) -> u32 {
+		self.id
+	}
+
+	fn set_id(&mut self, id: u32) {
+		self.id = id;
+	}
 }

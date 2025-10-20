@@ -1,8 +1,9 @@
 //! Taskに関するモジュール
 use serde::{Deserialize, Serialize};
 use chrono::{Local, NaiveDate};
+use crate::entities::HasId;
 
-#[derive(Serialize, Deserialize, Debug)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 /// タスクを表す構造体
 pub struct Task {
   /// タスクID
@@ -23,6 +24,22 @@ pub struct Task {
   status: Status,
 }
 
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub enum Importance {
+  Unimportant,
+  Normal,
+  Important,
+  Crucial,
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub enum Status {
+  ToDo,
+  Waiting,
+  WantDo,
+  Doing,
+}
+
 impl Task {
   pub fn create(id: u32, title: String) -> Task {
     Task {
@@ -37,23 +54,14 @@ impl Task {
     }
   }
 
-	pub fn get_id(&self) -> u32 {
+}
+
+impl HasId for Task {
+	fn get_id(&self) -> u32 {
 		self.id
 	}
-}
 
-#[derive(Serialize, Deserialize, Debug)]
-pub enum Importance {
-  Unimportant,
-  Normal,
-  Important,
-  Crucial,
-}
-
-#[derive(Serialize, Deserialize, Debug)]
-pub enum Status {
-  ToDo,
-  Waiting,
-  WantDo,
-  Doing,
+	fn set_id(&mut self, id: u32) {
+		self.id = id;
+	}
 }

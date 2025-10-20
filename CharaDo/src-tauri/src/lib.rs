@@ -13,7 +13,7 @@ mod error;
 mod repository;
 
 use entities::task::Task;
-use repository::task_repo::TaskRepository;
+use repository::json_repository::JsonRepository;
 
 fn lib_main() {
   // 保存ディレクトリ
@@ -22,11 +22,11 @@ fn lib_main() {
   path.push("com.cfeel.charado");
 
   info!("lib_main");
-  let mut task_repo = TaskRepository::connect(&(path.join("tasks.json"))).unwrap();
+  let mut task_repo: JsonRepository<Task> = JsonRepository::connect(&(path.join("tasks.json"))).unwrap();
 
   // テスト用タスク追加
-  let task = Task::create(task_repo.get_next_task_id(), "test2".to_string());
-  task_repo.add_task(task).unwrap();
+  let task = Task::create(0, "test3".to_string());
+  task_repo.add(task).unwrap();
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
