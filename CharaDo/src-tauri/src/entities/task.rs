@@ -1,6 +1,5 @@
 //! Taskに関するモジュール
 use serde::{Deserialize, Serialize};
-
 use chrono::{Local, NaiveDate};
 
 #[derive(Serialize, Deserialize, Debug)]
@@ -25,28 +24,6 @@ pub struct Task {
 }
 
 impl Task {
-  pub fn new(
-    id: u32,
-    title: String,
-    description: String,
-    due_date: Option<NaiveDate>,
-    created_date: NaiveDate,
-    out_cast_date: Option<NaiveDate>,
-    importance: Importance,
-    status: Status,
-  ) -> Task {
-    Task {
-      id,
-      title,
-      description,
-      due_date,
-      created_date,
-      out_cast_date,
-      importance,
-      status,
-    }
-  }
-
   pub fn create(id: u32, title: String) -> Task {
     Task {
       id,
