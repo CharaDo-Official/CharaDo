@@ -1,3 +1,10 @@
-// pub use : あたかもこのスコープで定義したかのようにできる。このスコープをuseで持ち込む人も使えるようになる
-// 宣言ではなく；を使うと、モジュールを、モジュールと同じ名前をしたファイルから読み込むようになる
-pub mod json_repository;
+pub mod task_repo;
+
+// pub trait Repository {
+// 	fn connect(&self) -> Result<(), Error>;
+// }
+
+// pub trait JsonRepository {
+// 	fn load_from_file(&self, path: &str) -> Result<Vec<Record>, Error>;
+// 	fn save_to_file(&self, path: &str, records: &Vec<Record>) -> Result<(), Error>;
+// }

@@ -1,11 +1,31 @@
+use std::io;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
-pub enum AppError {
-	#[error("I/O error: {0}")]
-	Io(std::io::Error),
-	#[error("JSON parse error: {0}")]
-	Parse(serde_json::Error),
-	#[error("Serialization error: {0}")]
-	Serialize(serde_json::Error),
+pub enum UserError {
+    #[error("JSON parse error: {0}")]
+    ParseError(serde_json::Error), // JSONパースエラー
+    #[error("Validation error: {0}")]
+    ValidationError(String), // バリデーションエラー
+    #[error("Database error: {0}")]
+    DatabaseError(String), // DB操作エラー
+    #[error("I/O error: {0}")]
+    IoError(io::Error), // ファイル操作エラー
+}
+
+// エラー体系に参加させるために std::error::Error を実装 [derive(Error)] で自動実装
+// impl std::error::Error for UserError {}
+
+// serde_json::ErrorからUserErrorへの変換を実装
+impl From<serde_json::Error> for UserError {
+    fn from(err: serde_json::Error) -> UserError {
+        UserError::ParseError(err)
+    }
+}
+
+// io::ErrorからUserErrorへの変換を実装
+impl From<io::Error> for UserError {
+    fn from(err: io::Error) -> UserError {
+        UserError::IoError(err)
+    }
 }
