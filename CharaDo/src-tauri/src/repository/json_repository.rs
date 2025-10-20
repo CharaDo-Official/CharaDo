@@ -1,9 +1,9 @@
-
+use crate::entities::HasId;
 use crate::error::UserError;
 use serde::{de::DeserializeOwned, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};
-use crate::entities::HasId;
+use chrono::Local;
 
 use log::{info, warn};
 
@@ -21,20 +21,26 @@ impl<T> JsonRepository<T>
 where
   T: Serialize + DeserializeOwned + HasId + Clone,
 {
-	/// 指定リポジトリに接続
-  /// path: 任意の Path 型を受け取れるようにする AsRef<Path>: Pathに変換可能なあらゆる型
-  pub fn connect(path: impl AsRef<Path>) -> Result<Self, UserError> {
-    let path = path.as_ref().to_path_buf();
-
+  /// 指定リポジトリに接続
+  pub fn connect(path: &PathBuf) -> Result<Self, UserError> {
     if path.exists() {
-      let content = fs::read_to_string(&path)?;
-      match serde_json::from_str::<Vec<T>>(&content) {
-        Ok(items) => return Ok(JsonRepository { path, items }),
+      // ファイル読み込み
+      let content = match fs::read_to_string(&path) {
+        Ok(c) => c,
         Err(e) => {
-          // 壊れている場合はバックアップして新規作成へ落とす
-					warn!("JSONの読み込みに失敗しました: {e}");
-          let backup = path.with_extension("bak.json");
-          fs::rename(&path, &backup)?;
+          warn!("JSONファイルの読み込みに失敗しました（IOエラー）: {e}");
+          let _ = Self::backup_with_timestamp(&path);
+          return Self::initialize(path);
+        }
+      };
+
+      // JSONデコード
+      match serde_json::from_str::<Vec<T>>(&content) {
+        Ok(items) => return Ok(JsonRepository { path: path.clone(), items }),
+        Err(e) => {
+          warn!("JSONの読み込みに失敗しました（構文エラー）: {e}");
+          let _ = Self::backup_with_timestamp(&path);
+          return Self::initialize(path);
         }
       }
     }
@@ -43,8 +49,19 @@ where
     Self::initialize(path)
   }
 
-	/// 新規作成
-  pub fn initialize(path: PathBuf) -> Result<Self, UserError> {
+  fn backup_with_timestamp(path: &Path) -> Result<PathBuf, std::io::Error> {
+    let timestamp = Local::now().format("%Y%m%d%H%M%S");
+    let backup_path = path.with_file_name(format!(
+      "{}_{}.bak.json",
+      path.file_stem().unwrap().to_string_lossy(),
+      timestamp
+    ));
+    fs::rename(path, &backup_path)?;
+    Ok(backup_path)
+  }
+
+  /// 新規作成
+  pub fn initialize(path: &PathBuf) -> Result<Self, UserError> {
     if let Some(parent) = path.parent() {
       if !parent.exists() {
         info!("ディレクトリを作成します: {}", parent.display());
@@ -59,7 +76,7 @@ where
     Ok(repo)
   }
 
-	/// 追加
+  /// 追加
   pub fn add(&mut self, mut entity: T) -> Result<u32, UserError> {
     let new_id = self.next_id();
     entity.set_id(new_id);
@@ -68,17 +85,17 @@ where
     Ok(new_id)
   }
 
-	/// 全件取得
+  /// 全件取得
   pub fn get_all(&self) -> &Vec<T> {
     &self.items
   }
 
-	/// 取得
+  /// 取得
   pub fn get(&self, id: u32) -> Option<&T> {
     self.items.iter().find(|item| item.get_id() == id)
   }
 
-	/// 削除
+  /// 削除
   pub fn remove(&mut self, id: u32) -> Result<(), UserError> {
     if let Some(pos) = self.items.iter().position(|item| item.get_id() == id) {
       self.items.remove(pos);
@@ -90,7 +107,7 @@ where
     }
   }
 
-	/// 更新
+  /// 更新
   pub fn update(&mut self, updated: T) -> Result<(), UserError> {
     let id = updated.get_id();
     if let Some(pos) = self.items.iter().position(|item| item.get_id() == id) {
@@ -98,20 +115,20 @@ where
       self.save()?;
       Ok(())
     } else {
-			warn!("id {} not found", id);
+      warn!("id {} not found", id);
       Err(UserError::NotFoundError(format!("id {} not found", id)))
     }
   }
 
-	/// 次の利用可能なIDを取得
+  /// 次の利用可能なIDを取得
   pub fn next_id(&self) -> u32 {
-		match self.items.last() {
-			Some(last_item) => last_item.get_id() + 1,
-			None => 1,
-		}
+    match self.items.last() {
+      Some(last_item) => last_item.get_id() + 1,
+      None => 1,
+    }
   }
 
-	/// 保存
+  /// 保存
   fn save(&self) -> Result<(), UserError> {
     let json = serde_json::to_string_pretty(&self.items)?;
     fs::write(&self.path, json)?;
