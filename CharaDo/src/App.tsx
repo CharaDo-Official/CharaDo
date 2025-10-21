@@ -1,5 +1,6 @@
 import "./App.css";
 import { info } from "@tauri-apps/plugin-log";
+import TaskTest from "./test";
 
 
 async function test () {
@@ -15,6 +16,7 @@ function App() {
 			<button onClick={test}>
 				Click me
 			</button>
+			<TaskTest />
 		</div>
 	);
 }

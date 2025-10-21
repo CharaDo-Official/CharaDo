@@ -11,6 +11,8 @@ use tauri_plugin_log::{Builder as LogBuilder, Target, TargetKind};
 mod entities;
 mod error;
 mod repository;
+mod command;
+mod config;
 
 use entities::task::Task;
 use repository::json_repository::JsonRepository;
@@ -36,12 +38,12 @@ pub fn run() {
     .plugin(
       LogBuilder::new()
         // .target(Target::new(TargetKind::Stdout)) // 何故か二重出力になる
-        .target(Target::new(TargetKind::Webview))
+        // .target(Target::new(TargetKind::Webview))
         // .target(Target::new(TargetKind::LogDir { file_name: Some("logs".to_string()) }))	// わざわざやらなくても自動で出てた
         .build(),
     )
     .plugin(tauri_plugin_opener::init())
-    .invoke_handler(tauri::generate_handler![greet])
+    .invoke_handler(tauri::generate_handler![greet, command::task_command::get_all_tasks])
     .setup(|_app| {
       lib_main();
       Ok(())
