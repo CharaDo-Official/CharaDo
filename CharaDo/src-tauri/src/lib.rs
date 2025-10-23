@@ -16,6 +16,7 @@ mod config;
 
 use entities::task::Task;
 use repository::json_repository::JsonRepository;
+use command::task_command;
 
 fn lib_main() {
   // 保存ディレクトリ
@@ -43,7 +44,9 @@ pub fn run() {
         .build(),
     )
     .plugin(tauri_plugin_opener::init())
-    .invoke_handler(tauri::generate_handler![greet, command::task_command::get_all_tasks])
+    .invoke_handler(tauri::generate_handler![greet, 
+			task_command::get_all_tasks, task_command::add_task, task_command::update_task, task_command::delete_task, task_command::get_task, task_command::add_task_by_title, task_command::update_tasks
+			])
     .setup(|_app| {
       lib_main();
       Ok(())
