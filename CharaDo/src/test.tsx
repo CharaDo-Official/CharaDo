@@ -1,15 +1,13 @@
 import { invoke } from "@tauri-apps/api/core";
-import { debug } from "@tauri-apps/plugin-log";
+import { debug, warn } from "@tauri-apps/plugin-log";
 import { useEffect } from "react";
 
 
-function TaskTest() {	
+function TaskTest() {
 	useEffect(() => {
-		const fetchTasks = async () => {
-			const tasks = await invoke("get_all_tasks");
-			debug(`tasks: ${JSON.stringify(tasks)}`);
-		};
-		fetchTasks();
+		invoke("get_all_tasks")
+			.then((tasks) => debug(`tasks: ${JSON.stringify(tasks)}`))
+			.catch((error) => warn(error));
 	}, []); // ← 空依存配列により初回マウント時のみ実行
 
 	return (

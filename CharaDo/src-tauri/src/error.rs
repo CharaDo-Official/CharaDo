@@ -31,3 +31,13 @@ impl From<io::Error> for UserError {
     UserError::IoError(err)
   }
 }
+
+// UserErrorをシリアライズ可能にする実装(invokeで返すため)
+impl serde::Serialize for UserError {
+  fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
+  where
+    S: serde::ser::Serializer,
+  {
+    serializer.serialize_str(self.to_string().as_ref())
+  }
+}

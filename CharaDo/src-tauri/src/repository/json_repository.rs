@@ -1,3 +1,4 @@
+use crate::entities::user::User;
 use crate::entities::HasId;
 use crate::error::UserError;
 use serde::{de::DeserializeOwned, Serialize};
@@ -49,7 +50,7 @@ where
     Self::initialize(path)
   }
 
-  fn backup_with_timestamp(path: &Path) -> Result<PathBuf, std::io::Error> {
+  fn backup_with_timestamp(path: &Path) -> Result<PathBuf, UserError> {
     let timestamp = Local::now().format("%Y%m%d%H%M%S");
     let backup_path = path.with_file_name(format!(
       "{}_{}.bak.json",

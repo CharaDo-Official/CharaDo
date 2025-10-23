@@ -5,16 +5,18 @@ use crate::repository::json_repository::JsonRepository;
 use crate::config;
 
 #[tauri::command]
-pub fn get_all_tasks() -> Vec<Task> {
+pub fn get_all_tasks() -> Result<Vec<Task>, UserError> {
 
-  let task_repo: JsonRepository<Task> = JsonRepository::connect(&config::task_repository_file()).unwrap();
-  task_repo.get_all().clone()
+  match JsonRepository::connect(&config::task_repository_file()) {
+		Ok(repo) => return Ok(repo.get_all().clone()),
+		Err(e) => return Err(e),
+	}
 }
 
 #[tauri::command]
 pub fn add_task_by_title(title: String) -> Result<u32, UserError> {
 
-	let mut task_repo: JsonRepository<Task> = JsonRepository::connect(&config::task_repository_file()).unwrap();
+	let mut task_repo: JsonRepository<Task> = JsonRepository::connect(&config::task_repository_file())?;
 	task_repo.add(Task::new(0, title))
 }
 
