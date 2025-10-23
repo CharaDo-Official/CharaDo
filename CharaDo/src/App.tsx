@@ -1,6 +1,6 @@
 import "./App.css";
 import { info } from "@tauri-apps/plugin-log";
-import TaskTest from "./test";
+import TaskTest from "./testComponent";
 
 
 async function test () {
