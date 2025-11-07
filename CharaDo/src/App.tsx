@@ -1,7 +1,8 @@
 import { useState } from "react";
-import "./App.css";
 import { info } from "@tauri-apps/plugin-log";
 import TabBar from "./components/layout/TabBar";
+import TaskView from "./views/taskView";
+import DebugView from "./views/DebugView";
 
 
 
@@ -16,6 +17,8 @@ function App() {
 		<div>
 			<TabBar active={activeTab} onChange={setActiveTab} />
 			<main>
+				{activeTab === "task" && <TaskView />}
+				{activeTab === "debug" && <DebugView />}
 			</main>
 			<h1>Hello World!</h1>
 			<p>かわいいキャラクターがあなたのタスクを管理してくれる、可愛い×ToDoアプリ！</p>
