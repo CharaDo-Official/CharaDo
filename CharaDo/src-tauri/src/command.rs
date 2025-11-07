@@ -1,1 +1,3 @@
-pub mod task_command;
+pub mod task;
+pub mod character;
+pub mod user;
