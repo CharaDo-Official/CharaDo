@@ -6,7 +6,7 @@ type Props = {
 	onChange: (tab: TabKey) => void;
 };
 
-export const TabBar = ({ active, onChange }: Props) => {
+const TabBar = ({ active, onChange }: Props) => {
 	return (
 		<div className="flex">
 			{TABS.map((tab) => (
@@ -21,3 +21,5 @@ export const TabBar = ({ active, onChange }: Props) => {
 		</div>
 	);
 };
+
+export default TabBar;

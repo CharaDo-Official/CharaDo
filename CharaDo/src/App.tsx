@@ -1,9 +1,9 @@
 import { info } from "@tauri-apps/plugin-log";
 import { useTab } from "@hooks/useTab";
-import { TabBar } from "@components/layout/TabBar";
+import { TabKey } from "@config/tabs";
+import TabBar from "@components/layout/TabBar";
 import TaskView from "@views/TaskView";
 import DebugView from "@views/DebugView";
-import { TabKey } from "@config/tabs";
 
 
 
