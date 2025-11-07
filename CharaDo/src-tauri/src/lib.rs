@@ -4,9 +4,9 @@ fn greet(name: &str) -> String {
   format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
-use log::{debug, error, info, trace, warn};
+use log::{info};
 use std::path::PathBuf;
-use tauri_plugin_log::{Builder as LogBuilder, Target, TargetKind};
+use tauri_plugin_log::{Builder as LogBuilder};
 
 mod entities;
 mod error;

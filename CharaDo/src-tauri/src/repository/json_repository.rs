@@ -1,4 +1,3 @@
-use crate::entities::user::User;
 use crate::entities::HasId;
 use crate::error::UserError;
 use serde::{de::DeserializeOwned, Serialize};
