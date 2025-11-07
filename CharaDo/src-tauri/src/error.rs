@@ -7,8 +7,6 @@ pub enum UserError {
   ParseError(serde_json::Error), // JSONパースエラー
   #[error("Validation error: {0}")]
   ValidationError(String), // バリデーションエラー
-  #[error("Database error: {0}")]
-  DatabaseError(String), // DB操作エラー
   #[error("I/O error: {0}")]
   IoError(io::Error), // ファイル操作エラー
 	#[error("Data not found: {0}")]

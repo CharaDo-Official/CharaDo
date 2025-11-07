@@ -4,9 +4,9 @@ fn greet(name: &str) -> String {
   format!("Hello, {}! You've been greeted from Rust!", name)
 }
 
-use log::{debug, error, info, trace, warn};
+use log::{info};
 use std::path::PathBuf;
-use tauri_plugin_log::{Builder as LogBuilder, Target, TargetKind};
+use tauri_plugin_log::{Builder as LogBuilder};
 
 mod entities;
 mod error;
@@ -16,7 +16,9 @@ mod config;
 
 use entities::task::Task;
 use repository::json_repository::JsonRepository;
-use command::task_command;
+use command::task;
+use command::character;
+use command::user;
 
 fn lib_main() {
   // 保存ディレクトリ
@@ -45,7 +47,9 @@ pub fn run() {
     )
     .plugin(tauri_plugin_opener::init())
     .invoke_handler(tauri::generate_handler![greet, 
-			task_command::get_all_tasks, task_command::add_task, task_command::update_task, task_command::delete_task, task_command::get_task, task_command::add_task_by_title, task_command::update_tasks
+			task::get_all_tasks, task::add_task, task::update_task, task::delete_task, task::get_task, task::add_task_by_title, task::update_tasks,
+			character::get_all_characters, character::add_character, character::delete_character, character::update_character, character::get_character, character::update_characters,
+			user::get_user_config, user::get_using_character_id, user::set_using_character_id,
 			])
     .setup(|_app| {
       lib_main();

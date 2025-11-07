@@ -2,8 +2,10 @@
 use serde::{Deserialize, Serialize};
 use chrono::{Local, NaiveDate};
 use crate::entities::HasId;
+use ts_rs::TS;
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(TS, Serialize, Deserialize, Clone, Debug)]
+#[ts(export, export_to = "task.ts")]
 /// タスクを表す構造体
 pub struct Task {
   /// タスクID
@@ -13,10 +15,13 @@ pub struct Task {
   /// 説明
   description: String,
   /// 締め切り日
+	#[ts(type = "string")]
   due_date: Option<NaiveDate>,
   /// 作成日
+	#[ts(type = "string")]
   created_date: NaiveDate,
   /// 提案から外れた日
+	#[ts(type = "string")]
   out_cast_date: Option<NaiveDate>,
   /// 重要度
   importance: Importance,
@@ -26,7 +31,8 @@ pub struct Task {
 	display_order: u32,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(TS, Serialize, Deserialize, Clone, Debug)]
+#[ts(export, export_to = "task.ts")]
 pub enum Importance {
   Unimportant,
   Normal,
@@ -34,7 +40,8 @@ pub enum Importance {
   Crucial,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(TS, Serialize, Deserialize, Clone, Debug)]
+#[ts(export, export_to = "task.ts")]
 pub enum Status {
   ToDo,
   Waiting,

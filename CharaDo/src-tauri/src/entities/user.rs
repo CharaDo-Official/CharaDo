@@ -2,8 +2,10 @@
 use serde::{Deserialize, Serialize};
 
 use crate::entities::HasId;
+use ts_rs::TS;
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(TS, Serialize, Deserialize, Clone, Debug)]
+#[ts(export, export_to = "user.ts")]
 /// ユーザーを表す構造体
 pub struct User {
 	/// ユーザーID

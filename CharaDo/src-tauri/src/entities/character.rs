@@ -3,8 +3,10 @@ use std::path::PathBuf;
 use serde::{Deserialize, Serialize};
 
 use crate::entities::HasId;
+use ts_rs::TS;
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(TS, Serialize, Deserialize, Clone, Debug)]
+#[ts(export, export_to = "character.ts")]
 /// キャラクタを表す構造体
 pub struct Character {
 	/// キャラクターID
@@ -23,13 +25,15 @@ pub struct Character {
 	author: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(TS, Serialize, Deserialize, Clone, Debug)]
+#[ts(export, export_to = "character.ts")]
 pub enum AnimationKind {
 	Image,
 	Movie,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(TS, Serialize, Deserialize, Clone, Debug)]
+#[ts(export, export_to = "character.ts")]
 struct Animation {
 	/// アニメーションファイルのパス
 	path: PathBuf,
@@ -37,7 +41,8 @@ struct Animation {
 	kind: AnimationKind,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(TS, Serialize, Deserialize, Clone, Debug)]
+#[ts(export, export_to = "character.ts")]
 pub struct NecessaryAnimation {
 	/// 通常時アニメーション
 	usual: Animation,
@@ -49,7 +54,8 @@ pub struct NecessaryAnimation {
 	on_stage: Animation,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(TS, Serialize, Deserialize, Clone, Debug)]
+#[ts(export, export_to = "character.ts")]
 pub struct OptionalAnimation {
 	/// 退場時アニメーション
 	off_stage: Option<Animation>,
@@ -57,7 +63,8 @@ pub struct OptionalAnimation {
 	touch: Option<Animation>,
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
+#[derive(TS, Serialize, Deserialize, Clone, Debug)]
+#[ts(export, export_to = "character.ts")]
 pub struct Dialogue {
 	usual: Option<String>,
 	addition: Option<String>,
