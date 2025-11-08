@@ -47,7 +47,7 @@ pub fn run() {
     )
     .plugin(tauri_plugin_opener::init())
     .invoke_handler(tauri::generate_handler![greet, 
-			task::get_all_tasks, task::add_task, task::update_task, task::delete_task, task::get_task, task::add_task_by_title, task::update_tasks,
+			task::get_all_tasks, task::add_task, task::update_task, task::delete_task, task::get_task, task::update_tasks,
 			character::get_all_characters, character::add_character, character::delete_character, character::update_character, character::get_character, character::update_characters,
 			user::get_user_config, user::get_using_character_id, user::set_using_character_id,
 			])

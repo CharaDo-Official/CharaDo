@@ -14,10 +14,12 @@ pub fn get_all_tasks() -> Result<Vec<Task>, UserError> {
 }
 
 #[tauri::command]
-pub fn add_task_by_title(title: String) -> Result<u32, UserError> {
+pub fn get_task(id: u32) -> Option<Task> {
 
-	let mut task_repo: JsonRepository<Task> = JsonRepository::connect(&config::task_repository_file())?;
-	task_repo.add(Task::new(0, title))
+	match JsonRepository::connect(&config::task_repository_file()) {
+		Ok(repo) => repo.get(id).cloned(),
+		Err(_) => return None,
+	}
 }
 
 #[tauri::command]
@@ -51,14 +53,7 @@ pub fn update_tasks(tasks: Vec<Task>) -> Result<(), UserError> {
 }
 
 
-#[tauri::command]
-pub fn get_task(id: u32) -> Option<Task> {
 
-	match JsonRepository::connect(&config::task_repository_file()) {
-		Ok(repo) => repo.get(id).cloned(),
-		Err(_) => return None,
-	}
-}
 
 
 
