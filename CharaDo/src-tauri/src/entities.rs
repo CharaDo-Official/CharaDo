@@ -1,6 +1,7 @@
 pub mod task;
 pub mod character;
 pub mod user;
+pub mod store;
 
 /// ID を扱うためのトレイト
 pub trait HasId {

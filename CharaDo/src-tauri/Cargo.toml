@@ -36,3 +36,10 @@ tauri-plugin-log = "2"
 dirs-next = "2"
 # TS type
 ts-rs = "10"
+# WinRT
+windows = { version = "0.61.3", features = [
+  "Services_Store",
+  "Foundation",
+  "Foundation_Collections"
+] }
+windows-futures = "0.0"
