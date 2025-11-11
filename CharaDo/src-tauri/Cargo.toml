@@ -42,4 +42,4 @@ windows = { version = "0.61.3", features = [
   "Foundation",
   "Foundation_Collections"
 ] }
-windows-futures = "0.0"
+windows-future = "0.2.1"

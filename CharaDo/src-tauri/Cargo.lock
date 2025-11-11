@@ -562,7 +562,7 @@ dependencies = [
  "thiserror 1.0.69",
  "ts-rs",
  "windows",
- "windows-futures",
+ "windows-future",
 ]
 
 [[package]]
@@ -4962,12 +4962,6 @@ dependencies = [
  "windows-link 0.1.3",
  "windows-threading",
 ]
-
-[[package]]
-name = "windows-futures"
-version = "0.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "61b0dced175312ba7e048d606ed476a1926583b9fc5c752c210eda4e9b17ee04"
 
 [[package]]
 name = "windows-implement"
