@@ -6,7 +6,7 @@ fn greet(name: &str) -> String {
 
 use log::{info};
 use std::path::PathBuf;
-use tauri_plugin_log::{Builder as LogBuilder};
+use tauri_plugin_log::{Builder as LogBuilder, Target, TargetKind };
 
 mod entities;
 mod error;
@@ -42,9 +42,9 @@ pub fn run() {
     // Loggerプラグインの初期化
     .plugin(
       LogBuilder::new()
-        // .target(Target::new(TargetKind::Stdout)) // 何故か二重出力になる
-        // .target(Target::new(TargetKind::Webview))
-        // .target(Target::new(TargetKind::LogDir { file_name: Some("logs".to_string()) }))	// わざわざやらなくても自動で出てた
+        .target(Target::new(TargetKind::Stdout)) // 何故か二重出力になる
+        .target(Target::new(TargetKind::Webview))
+        .target(Target::new(TargetKind::LogDir { file_name: Some("logs".to_string()) }))	// わざわざやらなくても自動で出てた
         .build(),
     )
     .plugin(tauri_plugin_opener::init())

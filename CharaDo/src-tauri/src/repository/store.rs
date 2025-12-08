@@ -1,29 +1,51 @@
-use windows::{core::HSTRING, Services::Store::StoreContext};
+// ...existing code...
+use futures::executor::block_on;
 use std::future::IntoFuture;
+use windows::{core::HSTRING, Services::Store::StoreContext};
+use windows::Win32::System::Com::{CoInitializeEx, CoUninitialize, COINIT_APARTMENTTHREADED};
+use windows_collections::IIterable;
+
 use crate::entities::store::{StoreAppInfo, StoreAddOn};
 
-pub async fn fetch_store_info() -> Result<StoreAppInfo, String> {
-    let ctx = StoreContext::GetDefault().map_err(|e| format!("{e:?}"))?;
+pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, String> {
+    unsafe { let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED); }
+    struct ComGuard;
+    impl Drop for ComGuard { fn drop(&mut self) { unsafe { CoUninitialize(); } } }
+    let _com_guard = ComGuard;
 
-    // アプリ情報
-    let app_res = ctx
-        .GetStoreProductForCurrentAppAsync()
-        .map_err(|e| format!("{e:?}"))?
-        .into_future()              // ← 追加
-        .await
-        .map_err(|e| format!("{e:?}"))?;
-    let app = app_res.Product().map_err(|e| format!("{e:?}"))?;
-    let id = app.StoreId().map_err(|e| format!("{e:?}"))?.to_string();
-    let title = app.Title().map_err(|e| format!("{e:?}"))?.to_string();
+    let ctx = StoreContext::GetDefault().map_err(|e| format!("{:?}", e))?;
 
-    // アドオン（Durable）
-    // create a WinRT Array of HSTRING which implements IIterable<HSTRING>
-    // pass a slice of HSTRING which the bindings may accept as an IIterable
-    let kinds = [HSTRING::from("Durable")];
-        // TODO: get associated store products (Durable add-ons).
-        // The WinRT collection conversion to IIterable<HSTRING> is platform-specific
-        // and currently causes trait-bound errors in our build; return an empty list
-        // for now and implement the WinRT collection conversion later.
-        let mut add_ons = Vec::new();
+    let op = ctx.GetStoreProductForCurrentAppAsync().map_err(|e| format!("{:?}", e))?;
+    let app_res = block_on(op.into_future()).map_err(|e| format!("{:?}", e))?;
+    let app = app_res.Product().map_err(|e| format!("{:?}", e))?;
+    let id = app.StoreId().map_err(|e| format!("{:?}", e))?.to_string();
+    let title = app.Title().map_err(|e| format!("{:?}", e))?.to_string();
+
+    let mut add_ons: Vec<StoreAddOn> = Vec::new();
+    let kinds: IIterable<HSTRING> = IIterable::from(vec![HSTRING::from("Durable")]);
+    let addon_op = ctx.GetUserCollectionAsync(&kinds).map_err(|e| format!("{:?}", e))?;
+    let addon_res = block_on(addon_op.into_future()).map_err(|e| format!("{:?}", e))?;
+
+    if let Ok(products) = addon_res.Products() {
+        if let Ok(it) = products.First() {
+            while it.HasCurrent().unwrap_or(false) {
+                if let Ok(pair) = it.Current() {
+                    if let Ok(addon_id) = pair.Key() {
+                        if let Ok(addon_product) = pair.Value() {
+                            if let Ok(addon_title) = addon_product.Title() {
+                                add_ons.push(StoreAddOn {
+                                    id: addon_id.to_string(),
+                                    title: addon_title.to_string(),
+                                    is_owned: true,
+                                });
+                            }
+                        }
+                    }
+                }
+                it.MoveNext().ok();
+            }
+        }
+    }
+
     Ok(StoreAppInfo { id, title, add_ons })
 }

@@ -1,15 +1,15 @@
-use serde::Serialize;
+use serde::{Serialize, Deserialize};
 
-#[derive(Serialize, Debug, Clone)]
-pub struct StoreAppInfo {
-    pub id: String,
-    pub title: String,
-    pub add_ons: Vec<StoreAddOn>,
-}
-
-#[derive(Serialize, Debug, Clone)]
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct StoreAddOn {
     pub id: String,
     pub title: String,
     pub is_owned: bool,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct StoreAppInfo {
+    pub id: String,
+    pub title: String,
+    pub add_ons: Vec<StoreAddOn>,
 }
