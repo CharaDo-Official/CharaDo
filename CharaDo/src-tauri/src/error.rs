@@ -1,6 +1,7 @@
 use std::io;
 use std::sync::PoisonError;
 use std::sync::RwLockReadGuard;
+use std::sync::RwLockWriteGuard;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -34,9 +35,19 @@ impl From<io::Error> for UserError {
   }
 }
 
-// PoisonErrorからUserErrorへの変換を実装
+// PoisonErrorからUserErrorへの変換を実装 Read
 impl<T> From<PoisonError<RwLockReadGuard<'_, T>>> for UserError {
   fn from(err: PoisonError<RwLockReadGuard<'_, T>>) -> Self {
+    UserError::PoisonError(io::Error::new(
+      io::ErrorKind::Other,
+      format!("lock poisoned: {:?}", err),
+    ))
+  }
+}
+
+// PoisonErrorからUserErrorへの変換を実装 Write
+impl<T> From<PoisonError<RwLockWriteGuard<'_, T>>> for UserError {
+  fn from(err: PoisonError<RwLockWriteGuard<'_, T>>) -> Self {
     UserError::PoisonError(io::Error::new(
       io::ErrorKind::Other,
       format!("lock poisoned: {:?}", err),
