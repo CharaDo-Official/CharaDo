@@ -1,5 +1,5 @@
 use tauri::State;
-use crate::state::{self, AppState};
+use crate::state::AppState;
 use crate::entities::HasId;
 use crate::entities::user::User;
 use crate::error::UserError;
