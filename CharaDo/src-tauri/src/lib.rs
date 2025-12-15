@@ -1,24 +1,21 @@
-// Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-#[tauri::command]
-fn greet(name: &str) -> String {
-  format!("Hello, {}! You've been greeted from Rust!", name)
-}
-
-use log::{info};
+use log::info;
 use std::path::PathBuf;
-use tauri_plugin_log::{Builder as LogBuilder};
+use tauri_plugin_log::Builder as LogBuilder;
 
+mod command;
+mod config;
 mod entities;
 mod error;
 mod repository;
-mod command;
-mod config;
+mod state;
 
+use command::character;
+use command::task;
+use command::user;
 use entities::task::Task;
 use repository::json_repository::JsonRepository;
-use command::task;
-use command::character;
-use command::user;
+use state::AppState;
+
 
 fn lib_main() {
   // 保存ディレクトリ
@@ -27,7 +24,8 @@ fn lib_main() {
   path.push("com.cfeel.charado");
 
   info!("lib_main");
-  let mut task_repo: JsonRepository<Task> = JsonRepository::connect(&(path.join("tasks.json"))).unwrap();
+  let mut task_repo: JsonRepository<Task> =
+    JsonRepository::connect(&(path.join("tasks.json"))).unwrap();
 
   // テスト用タスク追加
   let task = Task::new(0, "test3".to_string());
@@ -46,11 +44,24 @@ pub fn run() {
         .build(),
     )
     .plugin(tauri_plugin_opener::init())
-    .invoke_handler(tauri::generate_handler![greet, 
-			task::get_all_tasks, task::add_task, task::update_task, task::delete_task, task::get_task, task::update_tasks,
-			character::get_all_characters, character::add_character, character::delete_character, character::update_character, character::get_character, character::update_characters,
-			user::get_user_config, user::get_using_character_id, user::set_using_character_id,
-			])
+    .manage(AppState::new())	// アプリケーション状態の管理
+    .invoke_handler(tauri::generate_handler![
+      task::get_all_tasks,
+      task::add_task,
+      task::update_task,
+      task::delete_task,
+      task::get_task,
+      task::update_tasks,
+      character::get_all_characters,
+      character::add_character,
+      character::delete_character,
+      character::update_character,
+      character::get_character,
+      character::update_characters,
+      user::get_user_config,
+      user::get_using_character_id,
+      user::set_using_character_id,
+    ])
     .setup(|_app| {
       lib_main();
       Ok(())

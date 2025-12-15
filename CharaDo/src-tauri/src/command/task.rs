@@ -1,15 +1,16 @@
-
+use tauri::State;
+use crate::state::{self, AppState};
 use crate::entities::task::Task;
 use crate::error::UserError;
 use crate::repository::json_repository::JsonRepository;
 use crate::config;
 
 #[tauri::command]
-pub fn get_all_tasks() -> Result<Vec<Task>, UserError> {
+pub fn get_all_tasks(state: State<AppState>) -> Result<Vec<Task>, UserError> {
 
-  match JsonRepository::connect(&config::task_repository_file()) {
+  match state.task_repo.read() {
 		Ok(repo) => return Ok(repo.get_all().clone()),
-		Err(e) => return Err(e),
+		Err(e) => return Err(e.into()),
 	}
 }
 
