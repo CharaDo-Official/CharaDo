@@ -1,98 +1,43 @@
 import React from "react";
-import { type Task, type Importance, type Status, ImportanceLevelMap, StatusLevelMap } from "@features/tasks/types";
+import { type Task } from "@features/tasks/types";
 
 interface TaskListProps {
 	tasks: Task[];
-	onUpdate: (task: Task) => Promise<void>;
-	onDelete: (id: number) => Promise<void>;
+	onTaskClick: (task: Task) => void;
 }
 
-export const TaskList: React.FC<TaskListProps> = ({ tasks, onUpdate, onDelete }) => {
-
-	const handleDelete = async (id: number) => {
-		if (confirm("Are you sure?")) {
-			try {
-				await onDelete(id);
-			} catch (e) {
-				console.error("Failed to delete task:", e);
-				alert(`Failed to delete task: ${e}`);
-			}
-		}
-	};
-
-	const handleStatusChange = async (task: Task, newStatus: Status) => {
-		try {
-			await onUpdate({ ...task, status: newStatus });
-		} catch (e) {
-			console.error("Failed to update status:", e);
-			alert(`Failed to update status: ${e}`);
-		}
-	};
-
-	const handleImportanceChange = async (task: Task, newImportance: Importance) => {
-		try {
-			await onUpdate({ ...task, importance: newImportance });
-		} catch (e) {
-			console.error("Failed to update importance:", e);
-			alert(`Failed to update importance: ${e}`);
-		}
-	};
-
+export const TaskList: React.FC<TaskListProps> = ({ tasks, onTaskClick }) => {
 	return (
-		<div className="bg-white rounded-md shadow-sm border border-gray-200 p-4">
-			<h2 className="text-xl font-bold mb-4">Task List</h2>
-			<ul className="space-y-3">
-				{tasks.map(task => (
-					<li key={task.id} className="border-b border-gray-100 pb-3 last:border-0 last:pb-0">
-						<div className="flex justify-between items-start mb-2">
-							<div>
-								<strong className="text-lg">{task.title}</strong>
-								<span className="ml-2 text-gray-600 text-sm">{task.description}</span>
-							</div>
-							<button
-								onClick={() => handleDelete(task.id)}
-								className="text-red-500 hover:text-red-700 text-sm font-medium px-2 py-1 rounded hover:bg-red-50 transition-colors"
-							>
-								Delete
-							</button>
+		<ul className="space-y-2">
+			{tasks.map(task => (
+				<li
+					key={task.id}
+					onClick={() => onTaskClick(task)}
+					className="bg-white p-3 rounded shadow-sm border border-gray-200 cursor-pointer hover:border-orange-400 hover:shadow-md transition-all group relative"
+				>
+					<div className="flex justify-between items-start">
+						<span className="font-medium text-gray-800 line-clamp-2">{task.title}</span>
+						{/* 重要度アイコン (簡易) */}
+						<div className="flex text-yellow-400 text-xs">
+							{task.importance === "Crucial" && "★★★"}
+							{task.importance === "Important" && "★★"}
+							{task.importance === "Normal" && "★"}
 						</div>
+					</div>
 
-						<div className="text-sm text-gray-500 mb-2">
-							<span>Created: {task.created_date.toLocaleDateString()}</span>
-							{task.due_date && <span> | Due: {task.due_date.toLocaleDateString()}</span>}
+					{task.due_date && (
+						<div className={`text-xs mt-2 flex items-center gap-1 ${new Date() > task.due_date ? "text-red-500 font-bold" : "text-gray-500"
+						}`}>
+							📅 {task.due_date.toLocaleDateString()}
 						</div>
+					)}
 
-						<div className="flex items-center gap-4 text-sm">
-							<div className="flex items-center gap-2">
-								<label className="font-medium text-gray-700">Status:</label>
-								<select
-									className="p-1 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 outline-none bg-white"
-									value={task.status}
-									onChange={(e) => handleStatusChange(task, e.target.value as Status)}
-								>
-									{(Object.entries(StatusLevelMap) as [Status, string][]).map(([key, label]) => (
-										<option key={key} value={key}>{label}</option>
-									))}
-								</select>
-							</div>
-
-							<div className="flex items-center gap-2">
-								<label className="font-medium text-gray-700">Importance:</label>
-								<select
-									className="p-1 border border-gray-300 rounded text-sm focus:ring-1 focus:ring-blue-500 outline-none bg-white"
-									value={task.importance}
-									onChange={(e) => handleImportanceChange(task, e.target.value as Importance)}
-								>
-									{(Object.entries(ImportanceLevelMap) as [Importance, string][]).map(([key, label]) => (
-										<option key={key} value={key}>{label}</option>
-									))}
-								</select>
-							</div>
-						</div>
-					</li>
-				))}
-			</ul>
-		</div>
+					{/* 編集アイコン (ホバー時のみ表示したりするが、今は常に簡易表示) */}
+					<div className="absolute bottom-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
+						<span className="text-gray-400 text-xs">✎</span>
+					</div>
+				</li>
+			))}
+		</ul>
 	);
 };
-
