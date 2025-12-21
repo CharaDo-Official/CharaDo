@@ -93,6 +93,10 @@ impl Character {
 			author,
 		}
 	}
+
+	pub fn is_name_empty(&self) -> bool {
+		self.name.is_empty()
+	}
 }
 
 impl HasId for Character {

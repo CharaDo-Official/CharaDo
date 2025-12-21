@@ -13,10 +13,25 @@ pub fn get_all_characters(state: State<AppState>) -> Result<Vec<Character>, User
 }
 
 #[tauri::command]
+pub fn get_character(state: State<AppState>, id: u32) -> Option<Character> {
+
+	match state.character_repo.read() {
+		Ok(repo) => repo.get(id).cloned(),
+		Err(_) => return None,
+	}
+}
+
+#[tauri::command]
 pub fn add_character(state: State<AppState>, character: Character) -> Result<u32, UserError> {
 
 	match state.character_repo.write() {
-		Ok(mut repo) => repo.add(character),
+		Ok(mut repo) => {
+			if character.is_name_empty() {
+				return Err(UserError::ValidationError("Name is empty".to_string()));
+			}
+			let id = repo.add(character)?;
+			Ok(id)
+		},
 		Err(e) => Err(e.into()),
 	}
 }
@@ -48,16 +63,6 @@ pub fn update_characters(state: State<AppState>, characters: Vec<Character>) -> 
 			Ok(())
 		},
 		Err(e) => Err(e.into()),
-	}
-}
-
-
-#[tauri::command]
-pub fn get_character(state: State<AppState>, id: u32) -> Option<Character> {
-
-	match state.character_repo.read() {
-		Ok(repo) => repo.get(id).cloned(),
-		Err(_) => return None,
 	}
 }
 
