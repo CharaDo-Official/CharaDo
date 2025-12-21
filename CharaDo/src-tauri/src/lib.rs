@@ -16,6 +16,7 @@ use entities::task::Task;
 use repository::json_repository::JsonRepository;
 use state::AppState;
 
+use command::store;
 
 fn lib_main() {
   // 保存ディレクトリ
@@ -38,9 +39,9 @@ pub fn run() {
     // Loggerプラグインの初期化
     .plugin(
       LogBuilder::new()
-        // .target(Target::new(TargetKind::Stdout)) // 何故か二重出力になる
-        // .target(Target::new(TargetKind::Webview))
-        // .target(Target::new(TargetKind::LogDir { file_name: Some("logs".to_string()) }))	// わざわざやらなくても自動で出てた
+        .target(Target::new(TargetKind::Stdout)) // 何故か二重出力になる
+        .target(Target::new(TargetKind::Webview))
+        .target(Target::new(TargetKind::LogDir { file_name: Some("logs".to_string()) }))	// わざわざやらなくても自動で出てた
         .build(),
     )
     .plugin(tauri_plugin_opener::init())
@@ -61,6 +62,7 @@ pub fn run() {
       user::get_user_config,
       user::get_using_character_id,
       user::set_using_character_id,
+      store::get_store_info,
     ])
     .setup(|_app| {
       lib_main();
