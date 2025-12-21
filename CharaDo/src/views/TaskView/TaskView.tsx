@@ -1,7 +1,7 @@
 // import styles from "./TaskView.module.css";
 import { useState } from "react";
 import { useTasks, useTaskActions } from "@features/tasks/hooks";
-import type { Task, Importance, Status } from "@features/tasks/types";
+import { type Task, type Importance, type Status, ImportanceLevelMap, StatusLevelMap, ImportanceLevel, StatusLevel } from "@features/tasks/types";
 
 const TaskView: React.FC = () => {
 	const { tasks, loading } = useTasks();
@@ -16,8 +16,8 @@ const TaskView: React.FC = () => {
 	}>({
 		title: "",
 		description: "",
-		importance: "Normal",
-		status: "ToDo",
+		importance: ImportanceLevel.Normal,
+		status: StatusLevel.ToDo,
 		due_date: "",
 	});
 
@@ -39,8 +39,8 @@ const TaskView: React.FC = () => {
 			setNewTask({
 				title: "",
 				description: "",
-				importance: "Normal",
-				status: "ToDo",
+				importance: ImportanceLevel.Normal,
+				status: StatusLevel.ToDo,
 				due_date: "",
 			});
 		} catch (e) {
@@ -108,10 +108,9 @@ const TaskView: React.FC = () => {
 						value={newTask.importance} 
 						onChange={(e) => setNewTask({ ...newTask, importance: e.target.value as Importance })}
 					>
-						<option value="Unimportant">Unimportant</option>
-						<option value="Normal">Normal</option>
-						<option value="Important">Important</option>
-						<option value="Crucial">Crucial</option>
+						{(Object.entries(ImportanceLevelMap) as [Importance, string][]).map(([key, label]) => (
+							<option key={key} value={key}>{label}</option>
+						))}
 					</select>
 				</div>
 				<div style={{ marginBottom: "10px" }}>
@@ -120,10 +119,9 @@ const TaskView: React.FC = () => {
 						value={newTask.status} 
 						onChange={(e) => setNewTask({ ...newTask, status: e.target.value as Status })}
 					>
-						<option value="ToDo">ToDo</option>
-						<option value="Waiting">Waiting</option>
-						<option value="WantDo">WantDo</option>
-						<option value="Doing">Doing</option>
+						{(Object.entries(StatusLevelMap) as [Status, string][]).map(([key, label]) => (
+							<option key={key} value={key}>{label}</option>
+						))}
 					</select>
 				</div>
 				<div style={{ marginBottom: "10px" }}>
@@ -151,10 +149,9 @@ const TaskView: React.FC = () => {
 							value={task.status} 
 							onChange={(e) => handleStatusChange(task, e.target.value as Status)}
 						>
-							<option value="ToDo">ToDo</option>
-							<option value="Waiting">Waiting</option>
-							<option value="WantDo">WantDo</option>
-							<option value="Doing">Doing</option>
+							{(Object.entries(StatusLevelMap) as [Status, string][]).map(([key, label]) => (
+								<option key={key} value={key}>{label}</option>
+							))}
 						</select>
 						
 						<label style={{ marginLeft: "10px" }}>Importance: </label>
@@ -162,10 +159,9 @@ const TaskView: React.FC = () => {
 							value={task.importance} 
 							onChange={(e) => handleImportanceChange(task, e.target.value as Importance)}
 						>
-							<option value="Unimportant">Unimportant</option>
-							<option value="Normal">Normal</option>
-							<option value="Important">Important</option>
-							<option value="Crucial">Crucial</option>
+							{(Object.entries(ImportanceLevelMap) as [Importance, string][]).map(([key, label]) => (
+								<option key={key} value={key}>{label}</option>
+							))}
 						</select>
 
 						<button onClick={() => handleDelete(task.id)} style={{ marginLeft: "10px", color: "red" }}>Delete</button>

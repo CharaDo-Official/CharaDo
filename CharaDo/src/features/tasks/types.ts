@@ -6,6 +6,36 @@ export type { TaskRaw };
 export type { Importance, Status };
 
 // フロントで扱う整形後の型
+export const ImportanceLevel = {
+	Unimportant: "Unimportant",
+	Normal: "Normal",
+	Important: "Important",
+	Crucial: "Crucial",
+} as const;
+
+export const StatusLevel = {
+	ToDo: "ToDo",
+	Waiting: "Waiting",
+	WantDo: "WantDo",
+	Doing: "Doing",
+} as const;
+
+// 日本語版マップ
+export const ImportanceLevelMap: Record<Importance, string> = {
+	[ImportanceLevel.Unimportant]: "まあまあ",
+	[ImportanceLevel.Normal]: "ふつう",
+	[ImportanceLevel.Important]: "そこそこ",
+	[ImportanceLevel.Crucial]: "だいじ",
+};
+
+export const StatusLevelMap: Record<Status, string> = {
+	[StatusLevel.ToDo]: "ToDo",
+	[StatusLevel.Waiting]: "相手待ち",
+	[StatusLevel.WantDo]: "やりたいこと",
+	[StatusLevel.Doing]: "進行中",
+};
+
+// フロントで扱う整形後の型
 export interface Task {
 	/**
 	 * タスクID
