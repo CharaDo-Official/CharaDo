@@ -25,7 +25,13 @@ pub fn get_task(state: State<AppState>, id: u32) -> Option<Task> {
 pub fn add_task(state: State<AppState>, task: Task) -> Result<u32, UserError> {
 
 	match state.task_repo.write() {
-		Ok(mut repo) => repo.add(task),
+		Ok(mut repo) => {
+			if task.is_title_empty() {
+				return Err(UserError::ValidationError("Title is empty".to_string()));
+			}
+			let id = repo.add(task)?;
+			Ok(id)
+		}
 		Err(e) => Err(e.into()),
 	}
 }

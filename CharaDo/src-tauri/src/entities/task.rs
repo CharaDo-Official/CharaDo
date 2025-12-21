@@ -64,6 +64,9 @@ impl Task {
     }
   }
 
+	pub fn is_title_empty(&self) -> bool {
+		self.title.is_empty()
+	}
 }
 
 impl HasId for Task {
