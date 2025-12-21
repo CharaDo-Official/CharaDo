@@ -5,10 +5,6 @@ import TaskView from "@views/TaskView";
 import DebugView from "@views/DebugView";
 
 function App() {
-	const [appInfo, setAppInfo] = useState(null);
-	const [loading, setLoading] = useState(false);
-
-function App() {
 	const { activeTab, selectTab } = useTab("task");
 
 	const renderView = (tab: TabKey) => {
