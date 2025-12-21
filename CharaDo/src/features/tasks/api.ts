@@ -18,16 +18,24 @@ function normalize(data: TaskRaw): Task {
 	};
 }
 
-// 整形データ -> 生データ
+// 日付を YYYY-MM-DD 形式の文字列に変換するヘルパー関数
+function toDateString(date: Date): string {
+	const year = date.getFullYear();
+	const month = String(date.getMonth() + 1).padStart(2, "0");
+	const day = String(date.getDate()).padStart(2, "0");
+	return `${year}-${month}-${day}`;
+}
+
+// 整形データ -> 生データ(Rust)
 function denormalize(data: Task): TaskRaw {
 	return {
 		id: Number(data.id),
 		title: String(data.title),
 		description: String(data.description),
-		due_date: data.due_date ? data.due_date.toISOString() : "",
-		created_date: data.created_date.toISOString(),
-		out_cast_date: data.out_cast_date ? data.out_cast_date.toISOString() : "",
-		importance: data.importance as Importance,
+		due_date: data.due_date ? toDateString(data.due_date) : null,
+		created_date: toDateString(data.created_date),
+		out_cast_date: data.out_cast_date ? toDateString(data.out_cast_date) : null,
+		importance: data.importance as Importance,	
 		status: data.status as Status,
 		display_order: Number(data.display_order),
 	};
