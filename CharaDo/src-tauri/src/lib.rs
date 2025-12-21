@@ -1,6 +1,6 @@
 use log::info;
 use std::path::PathBuf;
-use tauri_plugin_log::Builder as LogBuilder;
+use tauri_plugin_log::{Builder as LogBuilder, Target, TargetKind};
 
 mod command;
 mod config;
