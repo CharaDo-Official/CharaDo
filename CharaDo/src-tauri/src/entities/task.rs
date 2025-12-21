@@ -15,13 +15,13 @@ pub struct Task {
   /// 説明
   description: String,
   /// 締め切り日
-	#[ts(type = "string")]
+	#[ts(type = "string | null")]
   due_date: Option<NaiveDate>,
   /// 作成日
 	#[ts(type = "string")]
   created_date: NaiveDate,
   /// 提案から外れた日
-	#[ts(type = "string")]
+	#[ts(type = "string | null")]
   out_cast_date: Option<NaiveDate>,
   /// 重要度
   importance: Importance,
