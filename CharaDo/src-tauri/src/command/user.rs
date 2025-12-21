@@ -1,38 +1,43 @@
+use tauri::State;
+use crate::state::AppState;
 use crate::entities::HasId;
 use crate::entities::user::User;
 use crate::error::UserError;
-use crate::repository::json_repository::JsonRepository;
-use crate::config;
 
 #[tauri::command]
-pub fn get_user_config() -> Result<User, UserError> {
-	let repo: JsonRepository<User> = JsonRepository::connect(&config::user_config_file())?;
-	
-	match repo.get_all().get(0) {
-		Some(first) => Ok(first.clone()),
-		None => Err(UserError::NotFoundError("User not found".to_string())),
+pub fn get_user_config(state: State<AppState>) -> Result<User, UserError> {
+	match state.user_repo.read() {
+		Ok(repo) => match repo.get(0) {
+			Some(first) => Ok(first.clone()),
+			None => Err(UserError::NotFoundError("User not found".to_string())),
+		},
+		Err(e) => Err(e.into()),
 	}
 }
 
 #[tauri::command]
-pub fn get_using_character_id() -> Result<u32, UserError> {
-	let repo: JsonRepository<User> = JsonRepository::connect(&config::user_config_file())?;
-	
-	match repo.get_all().get(0) {
-		Some(first) => Ok(first.get_id()),
-		None => Err(UserError::NotFoundError("User not found".to_string())),
+pub fn get_using_character_id(state: State<AppState>) -> Result<u32, UserError> {	
+	match state.user_repo.read() {
+		Ok(repo) => match repo.get(0) {
+			Some(first) => Ok(first.get_id()),
+			None => Err(UserError::NotFoundError("User not found".to_string())),
+		},
+		Err(e) => Err(e.into()),
 	}
 }
 
 #[tauri::command]
-pub fn set_using_character_id(character_id: u32) -> Result<(), UserError> {
-	let mut user_repo: JsonRepository<User> = JsonRepository::connect(&config::user_config_file())?;
+pub fn set_using_character_id(state: State<AppState>, character_id: u32) -> Result<(), UserError> {
+	match state.user_repo.write() {
+		Ok(mut repo) => {
+			let mut user = match repo.get(0) {
+				Some(first) => first.clone(),
+				None => return Err(UserError::NotFoundError("User not found".to_string())),
+			};
 	
-	let mut user = match user_repo.get_all().get(0) {
-		Some(first) => first.clone(),
-		None => return Err(UserError::NotFoundError("User not found".to_string())),
-	};
-
-	user.set_id(character_id);
-	user_repo.update(user)
+			user.set_id(character_id);
+			repo.update(user)
+		}
+		Err(e) => Err(e.into()),
+	}
 }

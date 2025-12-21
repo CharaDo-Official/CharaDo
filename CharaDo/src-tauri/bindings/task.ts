@@ -23,7 +23,7 @@ description: string,
 /**
  * 締め切り日
  */
-due_date: string, 
+due_date: string | null, 
 /**
  * 作成日
  */
@@ -31,7 +31,7 @@ created_date: string,
 /**
  * 提案から外れた日
  */
-out_cast_date: string, 
+out_cast_date: string | null, 
 /**
  * 重要度
  */

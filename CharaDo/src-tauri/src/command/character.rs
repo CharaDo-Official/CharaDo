@@ -1,53 +1,61 @@
-
+use tauri::State;
+use crate::state::AppState;
 use crate::entities::character::Character;
 use crate::error::UserError;
-use crate::repository::json_repository::JsonRepository;
-use crate::config;
 
 #[tauri::command]
-pub fn get_all_characters() -> Result<Vec<Character>, UserError> {
+pub fn get_all_characters(state: State<AppState>) -> Result<Vec<Character>, UserError> {
 
-  match JsonRepository::connect(&config::character_repository_file()) {
+  match state.character_repo.read() {
 		Ok(repo) => return Ok(repo.get_all().clone()),
-		Err(e) => return Err(e),
+		Err(e) => return Err(e.into()),
 	}
 }
 
 #[tauri::command]
-pub fn add_character(character: Character) -> Result<u32, UserError> {
+pub fn add_character(state: State<AppState>, character: Character) -> Result<u32, UserError> {
 
-	let mut character_repo: JsonRepository<Character> = JsonRepository::connect(&config::character_repository_file())?;
-	character_repo.add(character)
-}
-
-#[tauri::command]
-pub fn delete_character(id: u32) -> Result<(), UserError> {
-
-	let mut character_repo: JsonRepository<Character> = JsonRepository::connect(&config::character_repository_file())?;
-	character_repo.remove(id)
-}
-
-#[tauri::command]
-pub fn update_character(character: Character) -> Result<(), UserError> {
-
-	let mut character_repo: JsonRepository<Character> = JsonRepository::connect(&config::character_repository_file())?;
-	character_repo.update(character)
-}
-#[tauri::command]
-pub fn update_characters(characters: Vec<Character>) -> Result<(), UserError> {
-
-	let mut character_repo: JsonRepository<Character> = JsonRepository::connect(&config::character_repository_file())?;
-	for character in characters {
-		character_repo.update(character)?;
+	match state.character_repo.write() {
+		Ok(mut repo) => repo.add(character),
+		Err(e) => Err(e.into()),
 	}
-	Ok(())
+}
+#[tauri::command]
+pub fn delete_character(state: State<AppState>, id: u32) -> Result<(), UserError> {
+
+	match state.character_repo.write() {
+		Ok(mut repo) => repo.remove(id),
+		Err(e) => Err(e.into()),
+	}
+}
+
+#[tauri::command]
+pub fn update_character(state: State<AppState>, character: Character) -> Result<(), UserError> {
+	match state.character_repo.write() {
+		Ok(mut repo) => repo.update(character),
+		Err(e) => Err(e.into()),
+	}
+}
+
+#[tauri::command]
+pub fn update_characters(state: State<AppState>, characters: Vec<Character>) -> Result<(), UserError> {
+
+	match state.character_repo.write() {
+		Ok(mut repo) => {
+			for character in characters {
+				repo.update(character)?;
+			}
+			Ok(())
+		},
+		Err(e) => Err(e.into()),
+	}
 }
 
 
 #[tauri::command]
-pub fn get_character(id: u32) -> Option<Character> {
+pub fn get_character(state: State<AppState>, id: u32) -> Option<Character> {
 
-	match JsonRepository::connect(&config::character_repository_file()) {
+	match state.character_repo.read() {
 		Ok(repo) => repo.get(id).cloned(),
 		Err(_) => return None,
 	}

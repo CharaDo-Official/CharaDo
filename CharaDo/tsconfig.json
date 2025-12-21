@@ -21,9 +21,15 @@
     "noFallthroughCasesInSwitch": true,
     
 		/* ts-rs */
-		"baseUrl": ".",
+		"baseUrl": "src",
     "paths": {
-      "@bindings/*": ["src-tauri/bindings/*"]
+			"@bindings/*": ["../src-tauri/bindings/*"],
+			"@lib/*": ["lib/*"],
+			"@hooks/*": ["hooks/*"],
+			"@views/*": ["views/*"],
+			"@components/*": ["components/*"],
+			"@config/*": ["config/*"],
+			"@features/*": ["features/*"]
     }
   },
   "include": ["src"],

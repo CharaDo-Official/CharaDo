@@ -45,6 +45,7 @@ export default defineConfig([
 			"semi": ["error", "always"],           // セミコロン必須
 			"indent": ["error", "tab"],            // インデントはタブで
 			"quotes": ["error", "double"],         // ダブルクオートを使用
+			"react/prop-types": "off",							// TypeScript使用時はprop-types不要
 		},
 		settings: {
 			react: { version: "detect" },
