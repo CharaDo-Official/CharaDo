@@ -9,6 +9,6 @@ export interface TabItem {
 // タブ設定
 export const TABS: TabItem[] = [
 	{ key: "task", label: "タスク" },
-	{ key: "character", label: "キャラクター" },
+	{ key: "character", label: "キャラ" },
 	{ key: "debug", label: "デバッグ" },
 ];
