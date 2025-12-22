@@ -1,6 +1,6 @@
 //! Taskに関するモジュール
 use serde::{Deserialize, Serialize};
-use chrono::{Local, NaiveDate};
+use chrono::NaiveDate;
 use crate::entities::HasId;
 use ts_rs::TS;
 
@@ -50,20 +50,6 @@ pub enum Status {
 }
 
 impl Task {
-  pub fn new(id: u32, title: String) -> Task {
-    Task {
-      id,
-      title,
-      description: String::new(),
-      due_date: None,
-      created_date: Local::now().naive_local().date(),
-      out_cast_date: None,
-      importance: Importance::Normal,
-      status: Status::ToDo,
-			display_order: id,
-    }
-  }
-
 	pub fn is_title_empty(&self) -> bool {
 		self.title.is_empty()
 	}

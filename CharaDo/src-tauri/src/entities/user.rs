@@ -14,16 +14,9 @@ pub struct User {
 	current_character_id: u32,
 }
 
-impl User {
-	const DEFAULT_CHARACTER_ID: u32 = 0;
-
-	pub fn new (id: u32) -> User {
-		User {
-			id,
-			current_character_id: User::DEFAULT_CHARACTER_ID,
-		}
-	}
-}
+// impl User {
+// 	const DEFAULT_CHARACTER_ID: u32 = 0;
+// }
 
 impl HasId for User {
 	fn get_id(&self) -> u32 {
