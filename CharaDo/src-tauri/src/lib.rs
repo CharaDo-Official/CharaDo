@@ -16,7 +16,9 @@ use state::AppState;
 use command::store;
 
 fn lib_main() {
-  info!("lib_main");
+	// コンパイル時の環境変数を取得
+	let addon_id: &str = env!("ADDON_ID");
+  info!("lib_main: ADDON_ID={}", addon_id);
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
