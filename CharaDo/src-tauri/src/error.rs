@@ -6,18 +6,24 @@ use thiserror::Error;
 
 #[derive(Debug, Error)]
 pub enum UserError {
+	/// JSONパースエラー
   #[error("JSON parse error: {0}")]
-  ParseError(serde_json::Error), // JSONパースエラー
+  ParseError(serde_json::Error),
+	/// バリデーションエラー
   #[error("Validation error: {0}")]
-  ValidationError(String), // バリデーションエラー
+  ValidationError(String),
+	/// ファイル操作エラー
   #[error("I/O error: {0}")]
-  IoError(io::Error), // ファイル操作エラー
+  IoError(io::Error),
+	/// データが見つからないエラー
   #[error("Data not found: {0}")]
-  NotFoundError(String), // データが見つからないエラー
+  NotFoundError(String),
+	/// RwLockのPoisonエラー
   #[error("PoisonError: {0}")]
-  PoisonError(io::Error), // RwLockのPoisonエラー
+  PoisonError(io::Error),
+	/// ストアエラー
   #[error("Store error: {0}")]
-  StoreError(String), // ストアエラー
+  StoreError(String),
 }
 
 // エラー体系に参加させるために std::error::Error を実装 [derive(Error)] で自動実装
