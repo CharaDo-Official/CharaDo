@@ -21,6 +21,8 @@ pub struct Character {
 	optional_animations: OptionalAnimation,
 	/// セリフ
 	dialogues: Dialogue,
+	/// アプリ標準かユーザー作成か
+	is_standard: bool,
 	/// 作者
 	author: Option<String>,
 }
@@ -76,24 +78,6 @@ pub struct Dialogue {
 
 
 impl Character {
-	pub fn new(id: u32,
-					name: String,
-					description: String,
-					necessary_animation: NecessaryAnimation,
-					optional_animations: OptionalAnimation,
-					dialogues: Dialogue,
-					author: Option<String>) -> Self {
-		Character {
-			id,
-			name,
-			description,
-			necessary_animation,
-			optional_animations,
-			dialogues,
-			author,
-		}
-	}
-
 	pub fn is_name_empty(&self) -> bool {
 		self.name.is_empty()
 	}
