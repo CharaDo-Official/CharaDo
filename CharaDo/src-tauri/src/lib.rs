@@ -18,7 +18,7 @@ use command::store;
 
 fn lib_main() {
 	// コンパイル時の環境変数を取得 難読化もしておく
-  info!("lib_main: ADDON_ID={}", obfstr!(env!("ADDON_ID")));
+  info!("lib_main: ToDo: remove this log after development: ADDON_ID_DATA_EXPANSION={}", obfstr!(env!("ADDON_ID_DATA_EXPANSION")));
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
