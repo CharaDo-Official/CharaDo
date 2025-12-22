@@ -16,6 +16,8 @@ pub enum UserError {
   NotFoundError(String), // データが見つからないエラー
   #[error("PoisonError: {0}")]
   PoisonError(io::Error), // RwLockのPoisonエラー
+  #[error("Store error: {0}")]
+  StoreError(String), // ストアエラー
 }
 
 // エラー体系に参加させるために std::error::Error を実装 [derive(Error)] で自動実装

@@ -3,6 +3,9 @@ use crate::state::AppState;
 use crate::entities::task::Task;
 use crate::error::UserError;
 
+/**
+ * 全てのタスクを取得
+ */
 #[tauri::command]
 pub fn get_all_tasks(state: State<AppState>) -> Result<Vec<Task>, UserError> {
 
@@ -12,6 +15,9 @@ pub fn get_all_tasks(state: State<AppState>) -> Result<Vec<Task>, UserError> {
 	}
 }
 
+/**
+ * タスクを取得
+ */
 #[tauri::command]
 pub fn get_task(state: State<AppState>, id: u32) -> Option<Task> {
 
@@ -21,6 +27,9 @@ pub fn get_task(state: State<AppState>, id: u32) -> Option<Task> {
 	}
 }
 
+/**
+ * タスクを追加
+ */
 #[tauri::command]
 pub fn add_task(state: State<AppState>, task: Task) -> Result<u32, UserError> {
 
@@ -36,6 +45,9 @@ pub fn add_task(state: State<AppState>, task: Task) -> Result<u32, UserError> {
 	}
 }
 
+/**
+ * タスクを削除
+ */
 #[tauri::command]
 pub fn delete_task(state: State<AppState>, id: u32) -> Result<(), UserError> {
 
@@ -45,6 +57,9 @@ pub fn delete_task(state: State<AppState>, id: u32) -> Result<(), UserError> {
 	}
 }
 
+/**
+ * タスクを更新
+ */
 #[tauri::command]
 pub fn update_task(state: State<AppState>, task: Task) -> Result<(), UserError> {
 
