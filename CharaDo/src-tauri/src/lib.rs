@@ -1,5 +1,4 @@
 use log::info;
-use std::path::PathBuf;
 use tauri_plugin_log::{Builder as LogBuilder, Target, TargetKind};
 
 mod command;
@@ -12,25 +11,12 @@ mod state;
 use command::character;
 use command::task;
 use command::user;
-use entities::task::Task;
-use repository::json_repository::JsonRepository;
 use state::AppState;
 
 use command::store;
 
 fn lib_main() {
-  // 保存ディレクトリ
-  let mut path: PathBuf =
-    dirs_next::data_local_dir().expect("AppLocalData ディレクトリが取得できませんでした");
-  path.push("com.cfeel.charado");
-
   info!("lib_main");
-  let mut task_repo: JsonRepository<Task> =
-    JsonRepository::connect(&(path.join("tasks.json"))).unwrap();
-
-  // テスト用タスク追加
-  let task = Task::new(0, "test3".to_string());
-  task_repo.add(task).unwrap();
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
