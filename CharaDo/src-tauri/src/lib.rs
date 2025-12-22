@@ -1,5 +1,6 @@
 use log::info;
 use tauri_plugin_log::{Builder as LogBuilder, Target, TargetKind};
+use obfstr::obfstr;
 
 mod command;
 mod config;
@@ -16,9 +17,8 @@ use state::AppState;
 use command::store;
 
 fn lib_main() {
-	// コンパイル時の環境変数を取得
-	let addon_id: &str = env!("ADDON_ID");
-  info!("lib_main: ADDON_ID={}", addon_id);
+	// コンパイル時の環境変数を取得 難読化もしておく
+  info!("lib_main: ADDON_ID={}", obfstr!(env!("ADDON_ID")));
 }
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
