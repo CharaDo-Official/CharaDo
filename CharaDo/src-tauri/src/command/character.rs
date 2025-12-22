@@ -52,20 +52,6 @@ pub fn update_character(state: State<AppState>, character: Character) -> Result<
 	}
 }
 
-#[tauri::command]
-pub fn update_characters(state: State<AppState>, characters: Vec<Character>) -> Result<(), UserError> {
-
-	match state.character_repo.write() {
-		Ok(mut repo) => {
-			for character in characters {
-				repo.update(character)?;
-			}
-			Ok(())
-		},
-		Err(e) => Err(e.into()),
-	}
-}
-
 
 
 

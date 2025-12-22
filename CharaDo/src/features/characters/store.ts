@@ -12,7 +12,6 @@ interface CharacterState {
 	addCharacter: (character: Character) => Promise<number>;
 	updateCharacter: (character: Character) => Promise<void>;
 	deleteCharacter: (id: number) => Promise<void>;
-	updateCharacters: (characters: Character[]) => Promise<void>;
 }
 
 /**
@@ -57,16 +56,6 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
 		set({ loading: true });
 		try {
 			await api.updateCharacter(character);
-			await get().fetchCharacters();
-		} finally {
-			set({ loading: false });
-		}
-	},
-
-	updateCharacters: async (characters: Character[]) => {
-		set({ loading: true });
-		try {
-			await api.updateCharacters(characters);
 			await get().fetchCharacters();
 		} finally {
 			set({ loading: false });

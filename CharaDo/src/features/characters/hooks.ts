@@ -26,10 +26,9 @@ export function useCharacterActions() {
 	const getCharacter = useCharacterStore((state) => state.getCharacter);
 	const addCharacter = useCharacterStore((state) => state.addCharacter);
 	const updateCharacter = useCharacterStore((state) => state.updateCharacter);
-	const updateCharacters = useCharacterStore((state) => state.updateCharacters);
 	const deleteCharacter = useCharacterStore((state) => state.deleteCharacter);
 
 	return { 
-		fetchCharacters, getCharacter, addCharacter, updateCharacter, updateCharacters, deleteCharacter };
+		fetchCharacters, getCharacter, addCharacter, updateCharacter, deleteCharacter };
 }
 

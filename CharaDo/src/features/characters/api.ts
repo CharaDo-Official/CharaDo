@@ -55,15 +55,6 @@ export async function updateCharacter(character: Character): Promise<void> {
 }
 
 /**
- * 複数のキャラクターを更新
- * @param characters キャラクターの配列
- */
-export async function updateCharacters(characters: Character[]): Promise<void> {
-	const rawCharacters = characters.map(denormalize);
-	await invoke("update_characters", { characters: rawCharacters });
-}
-
-/**
  * キャラクターを削除
  * @param id キャラクターID
  */

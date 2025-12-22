@@ -79,15 +79,6 @@ export async function updateTask(task: Task): Promise<void> {
 }
 
 /**
- * 複数のタスクを更新
- * @param tasks タスクの配列
- */
-export async function updateTasks(tasks: Task[]): Promise<void> {
-	const rawTasks = tasks.map(denormalize);
-	await invoke("update_tasks", { tasks: rawTasks });
-}
-
-/**
  * タスクを削除
  * @param id タスクID
  */

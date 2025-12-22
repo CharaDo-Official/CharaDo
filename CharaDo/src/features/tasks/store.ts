@@ -12,7 +12,6 @@ interface TaskState {
 	addTask: (task: Task) => Promise<void>;
 	updateTask: (task: Task) => Promise<void>;
 	deleteTask: (id: number) => Promise<void>;
-	updateTasks: (tasks: Task[]) => Promise<void>;
 }
 
 
@@ -60,16 +59,6 @@ export const useTaskStore = create<TaskState>((set, get) => ({
 		set({ loading: true });
 		try {
 			await api.updateTask(task);
-			await get().fetchTasks();
-		} finally {
-			set({ loading: false });
-		}
-	},
-
-	updateTasks: async (tasks: Task[]) => {
-		set({ loading: true });
-		try {
-			await api.updateTasks(tasks);
 			await get().fetchTasks();
 		} finally {
 			set({ loading: false });

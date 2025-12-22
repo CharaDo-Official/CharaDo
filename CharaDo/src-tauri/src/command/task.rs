@@ -54,21 +54,6 @@ pub fn update_task(state: State<AppState>, task: Task) -> Result<(), UserError> 
 	}
 }
 
-#[tauri::command]
-pub fn update_tasks(state: State<AppState>, tasks: Vec<Task>) -> Result<(), UserError> {
-
-	match state.task_repo.write() {
-		Ok(mut repo) => {
-			for task in tasks {
-				repo.update(task)?;
-			}
-			Ok(())
-		},
-		Err(e) => Err(e.into()),
-	}
-}
-
-
 
 
 
