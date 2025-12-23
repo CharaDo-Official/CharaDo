@@ -1,5 +1,4 @@
-use log::info;
-use obfstr::obfstr;
+// use log::info;
 use tauri_plugin_log::{Builder as LogBuilder, Target, TargetKind};
 
 mod command;
@@ -8,39 +7,28 @@ mod entities;
 mod error;
 mod repository;
 mod state;
+mod protocols;
 
 use command::character;
 use command::task;
 use command::user;
-use state::AppState;
-
 use command::store;
+use state::AppState;
+use protocols::assets;
 
-const VIDEO_DATA: &[u8] = include_bytes!("../assets/videos/sample.webm");
 
-
+mod test;
 fn lib_main() {
-  // コンパイル時の環境変数を取得 難読化もしておく
-  info!(
-    "lib_main: ToDo: remove this log after development: ADDON_ID_DATA_EXPANSION={}",
-    obfstr!(env!("ADDON_ID_DATA_EXPANSION"))
-  );
-
-	info!("VIDEO_DATA length: {}", VIDEO_DATA.len());
+	test::test();
 }
 
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   tauri::Builder::default()
-    .register_uri_scheme_protocol("vid", |_app, req| {
-      info!("Video Request URI: {:?}", req.uri());
-      tauri::http::Response::builder()
-        .header("Content-Type", "video/webm")
-        .header("Access-Control-Allow-Origin", "*")
-        .header("Accept-Ranges", "bytes")
-        .body(VIDEO_DATA.to_vec())
-        .expect("failed to build response")
+		// アセット埋め込み取得用プロトコル登録
+    .register_uri_scheme_protocol("assets", |_app, req| {
+      assets::media_protocol_handler(&req)
     })
     // Loggerプラグインの初期化
     .plugin(

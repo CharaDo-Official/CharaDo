@@ -41,7 +41,7 @@ const DebugView: React.FC = () => {
 		<div>
 			<h2>Debug View</h2>
 			<video
-				src="http://vid.localhost/videos/テスト.webm"
+				src="http://assets.localhost/tumugi/達成時.webm"
 				controls
 				width="300"
 			/>
