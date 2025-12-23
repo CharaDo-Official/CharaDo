@@ -1,9 +1,10 @@
 use crate::entities::HasId;
 use crate::error::UserError;
+use chrono::Local;
 use serde::{de::DeserializeOwned, Serialize};
 use std::fs;
+use std::io::{BufReader, BufWriter, Write};
 use std::path::{Path, PathBuf};
-use chrono::Local;
 
 use log::{info, warn};
 
@@ -23,40 +24,42 @@ where
 {
   /// 指定リポジトリに接続
   pub fn connect(path: &PathBuf) -> Result<Self, UserError> {
-    if path.exists() {
-      // ファイル読み込み
-      let content = match fs::read_to_string(&path) {
-        Ok(c) => c,
-        Err(e) => {
-          warn!("JSONファイルの読み込みに失敗しました（IOエラー）: {e}");
-          let _ = Self::backup_with_timestamp(&path);
-          return Self::initialize(path);
-        }
-      };
-
-      // JSONデコード
-      match serde_json::from_str::<Vec<T>>(&content) {
-        Ok(items) => return Ok(JsonRepository { path: path.clone(), items }),
-        Err(e) => {
-          warn!("JSONの読み込みに失敗しました（構文エラー）: {e}");
-          let _ = Self::backup_with_timestamp(&path);
-          return Self::initialize(path);
-        }
-      }
+		// ファイルが存在しない場合は初期化
+    if !path.exists() {
+      return Self::initialize(path);
     }
 
-    // 存在しない、または壊れていたため初期化
-    Self::initialize(path)
+    // ファイル読み込み
+		let file = fs::File::open(path)?;
+		let reader = BufReader::new(file);
+
+    let content = match serde_json::from_reader(reader) {
+      Ok(items) => items,
+      Err(e) => {
+        warn!("JSONの読み込みに失敗しました（構文エラー）: {e}");
+        let _ = Self::backup_with_timestamp(&path);
+        return Self::initialize(path);
+      }
+    };
+
+    return Ok(JsonRepository {
+      path: path.clone(),
+      items: content,
+    });
   }
 
   fn backup_with_timestamp(path: &Path) -> Result<PathBuf, UserError> {
     let timestamp = Local::now().format("%Y%m%d%H%M%S");
     let backup_path = path.with_file_name(format!(
       "{}_{}.bak.json",
-      path.file_stem().unwrap().to_string_lossy(),
+      path.file_stem().unwrap_or_default().to_string_lossy(),
       timestamp
     ));
-    fs::rename(path, &backup_path)?;
+    if let Err(e) = fs::rename(path, &backup_path) {
+      warn!("バックアップに失敗しました: {e}");
+      return Err(UserError::IoError(e));
+    }
+		
     Ok(backup_path)
   }
 
@@ -122,16 +125,27 @@ where
 
   /// 次の利用可能なIDを取得
   pub fn next_id(&self) -> u32 {
-    match self.items.last() {
-      Some(last_item) => last_item.get_id() + 1,
-      None => 1,
-    }
+    self
+      .items
+      .iter()
+      .map(|item| item.get_id())
+      .max()
+      .unwrap_or(0)
+      + 1
   }
 
-  /// 保存
+  /// 保存 アトミック
   fn save(&self) -> Result<(), UserError> {
-    let json = serde_json::to_string_pretty(&self.items)?;
-    fs::write(&self.path, json)?;
+    // 一時ファイルに書き込み
+    let temp_path = self.path.with_extension("tmp");
+    {
+      let mut writer = BufWriter::new(fs::File::create(&temp_path)?);
+      serde_json::to_writer_pretty(&mut writer, &self.items)?;
+      writer.flush()?;
+    }
+
+    // リネームで上書き
+    fs::rename(&temp_path, &self.path)?;
     Ok(())
   }
 }
