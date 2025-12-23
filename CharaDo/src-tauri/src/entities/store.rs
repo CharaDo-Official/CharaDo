@@ -19,7 +19,7 @@ pub enum AddonType {
 
 impl AddonType {
 	/// IDからAddonTypeを取得
-	fn from_id(id: &str) -> Option<AddonType> {
+	pub fn from_id(id: &str) -> Option<AddonType> {
 		if id == obfstr!(env!("ADDON_ID_DATA_EXPANSION")) {
 			Some(AddonType::DataExpansion)
 		} else if id == obfstr!(env!("ADDON_ID_MOTION_EXPANSION")) {
@@ -33,14 +33,6 @@ impl AddonType {
 		} else {
 			warn!("AddonType::from_id: unknown id={:?}", id);
 			None
-		}
-	}
-
-	/// 指定AddonTypeと一致するかを返す
-	pub fn is_match(self, id: &str) -> bool {
-		match Self::from_id(id) {
-			Some(addon_type) => self == addon_type,
-			None => false,
 		}
 	}
 }

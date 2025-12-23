@@ -49,3 +49,21 @@ pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, String> {
 
     Ok(StoreAppInfo { id, title, add_ons })
 }
+
+
+use obfstr::obfstr;
+use crate::error::UserError;
+// 開発用
+pub fn get_store_info_dev() -> Result<StoreAppInfo, UserError> {
+	Ok(StoreAppInfo {
+		id: "1234567890".to_string(),
+		title: "Test App".to_string(),
+		add_ons: vec![
+			StoreAddOn {
+				id: obfstr!(env!("ADDON_ID_MOTION_EXPANSION")).to_string(),
+				title: "ADDON_ID_MOTION_EXPANSION".to_string(),
+				is_owned: true,
+			},
+		],
+	})
+}
