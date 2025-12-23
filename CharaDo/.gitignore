@@ -26,3 +26,6 @@ target/
 
 # env
 .env
+
+# assets
+src-tauri/assets/videos
