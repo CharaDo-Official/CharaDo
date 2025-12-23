@@ -123,6 +123,13 @@ where
     }
   }
 
+	/// 全件更新
+	pub fn replace(&mut self, items: Vec<T>) -> Result<(), UserError> {
+		self.items = items;
+		self.save()?;
+		Ok(())
+	}
+
   /// 次の利用可能なIDを取得
   pub fn next_id(&self) -> u32 {
     self
