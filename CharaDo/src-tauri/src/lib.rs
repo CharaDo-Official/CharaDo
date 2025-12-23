@@ -8,6 +8,8 @@ mod error;
 mod repository;
 mod state;
 mod protocols;
+mod datas;
+mod services;
 
 use command::character;
 use command::task;

@@ -567,6 +567,7 @@ dependencies = [
  "tauri-plugin-opener",
  "thiserror 1.0.69",
  "ts-rs",
+ "url",
  "windows",
  "windows-collections",
  "windows-future",
