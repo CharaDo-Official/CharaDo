@@ -45,6 +45,7 @@ const DebugView: React.FC = () => {
 				controls
 				width="300"
 			/>
+			<img src="http://assets.localhost/tumugi/thumbnail.png" alt="紬" />
 			<div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
 				<button onClick={testLog}>
 					Test Log

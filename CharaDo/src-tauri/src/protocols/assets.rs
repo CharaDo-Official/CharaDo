@@ -26,7 +26,7 @@ pub fn media_protocol_handler(request: &Request<Vec<u8>>) -> Response<Vec<u8>> {
         .header(header::ACCESS_CONTROL_ALLOW_ORIGIN, "*") // CORSを設定
         .header(header::ACCEPT_RANGES, "bytes") // Rangeリクエストに対応
         .body(content.data.into_owned()) // データをそのまま返す
-        .unwrap()
+        .unwrap() // 信頼できるライブラリなのでunwrap
     }
     None => Response::builder().status(404).body(vec![]).unwrap(),
   }
