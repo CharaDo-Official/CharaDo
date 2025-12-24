@@ -72,4 +72,3 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
 		}
 	},
 }));
-

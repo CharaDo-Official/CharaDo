@@ -47,7 +47,7 @@ function denormalize(data: Task): TaskRaw {
  */
 export async function getAllTasks(): Promise<Task[]> {
 	// Rustから生データを取得
-	const rawTasks: TaskRaw[] = await safeInvoke("get_all_tasks");
+	const rawTasks = await safeInvoke<TaskRaw[]>("get_all_tasks");
 	// 整形
 	return rawTasks.map(normalize);
 }
@@ -58,7 +58,7 @@ export async function getAllTasks(): Promise<Task[]> {
  * @returns タスク
  */
 export async function getTask(id: number): Promise<Task | null> {
-	const rawTask: TaskRaw | null = await safeInvoke("get_task", { id });
+	const rawTask = await safeInvoke<TaskRaw | null>("get_task", { id });
 	if (rawTask === null) {
 		return null;
 	}
@@ -71,7 +71,7 @@ export async function getTask(id: number): Promise<Task | null> {
  * @returns 追加されたタスクID
  */
 export async function addTask(task: Task): Promise<number> {
-	return await safeInvoke("add_task", { task: denormalize(task) });
+	return await safeInvoke<number>("add_task", { task: denormalize(task) });
 }
 
 /**
@@ -79,7 +79,7 @@ export async function addTask(task: Task): Promise<number> {
  * @param task タスク
  */
 export async function updateTask(task: Task): Promise<void> {
-	await safeInvoke("update_task", { task: denormalize(task) });
+	await safeInvoke<void>("update_task", { task: denormalize(task) });
 }
 
 /**
@@ -87,5 +87,5 @@ export async function updateTask(task: Task): Promise<void> {
  * @param id タスクID
  */
 export async function deleteTask(id: number): Promise<void> {
-	await safeInvoke("delete_task", { id });
+	await safeInvoke<void>("delete_task", { id });
 }
