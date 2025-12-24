@@ -29,3 +29,6 @@ target/
 
 # assets
 src-tauri/assets
+
+# coverage
+coverage
