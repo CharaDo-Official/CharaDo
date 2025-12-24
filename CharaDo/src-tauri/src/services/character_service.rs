@@ -136,7 +136,7 @@ pub fn update_character(state: State<AppState>, character: Character) -> Result<
 
 		// 更新対象のキャラクター取得
 		let mut target_character = repo.get(id).cloned().ok_or_else(|| 
-			UserError::NotFoundError("Update target character not found".to_string()
+			UserError::NotFoundError("更新対象のキャラクターが見つかりません".to_string()
 		))?;
 
 		// データ加工
