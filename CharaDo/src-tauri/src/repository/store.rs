@@ -4,48 +4,136 @@ use windows::{core::HSTRING, Services::Store::StoreContext};
 use windows::Win32::System::Com::{CoInitializeEx, CoUninitialize, COINIT_APARTMENTTHREADED};
 use windows_collections::IIterable;
 
-use crate::entities::store::{StoreAppInfo, StoreAddOn};
+use crate::error::UserError;
+use crate::entities::store::{StoreAppInfo, StoreAddOn, StoreAddOns};
+use log::{warn};
 
-//アドオン情報、ストア情報前権取得
 pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, String> {
-    unsafe { let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED); }
+    // WindowsRT API対応：COM STA初期化と自動解放（ComGuard）
+    unsafe { let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED);}
     struct ComGuard;
-    impl Drop for ComGuard { fn drop(&mut self) { unsafe { CoUninitialize(); } } }
+    impl Drop for ComGuard { fn drop(&mut self) { unsafe { CoUninitialize();}}}
     let _com_guard = ComGuard;
 
-    let ctx = StoreContext::GetDefault().map_err(|e| format!("{:?}", e))?;
+    // StoreContextの取得
+    let ctx = match StoreContext::GetDefault() {
+        Ok(ctx) => ctx,
+        Err(e) => {
+            warn!("StoreContextの取得に失敗しました (Error: {e})");
+            return Err(format!("{:?}", e));
+        }
+    };
 
-    let op = ctx.GetStoreProductForCurrentAppAsync().map_err(|e| format!("{:?}", e))?;
-    let app_res = block_on(op.into_future()).map_err(|e| format!("{:?}", e))?;
-    let app = app_res.Product().map_err(|e| format!("{:?}", e))?;
-    let id = app.StoreId().map_err(|e| format!("{:?}", e))?.to_string();
-    let title = app.Title().map_err(|e| format!("{:?}", e))?.to_string();
+    // アプリ情報の取得操作の生成
+    let app_op = match ctx.GetStoreProductForCurrentAppAsync() {
+        Ok(op) => op,
+        Err(e) => {
+            warn!("アプリ情報の取得操作の生成に失敗しました (Error: {e})");
+            return Err(format!("{:?}", e));
+        }
+    };
+    // 非同期操作を実行し、アプリ情報の取得を待機
+    let app_res = match block_on(app_op.into_future()) {
+        Ok(res) => res,
+        Err(e) => {
+            warn!("アプリ情報の取得に失敗しました (Error: {e})");
+            return Err(format!("{:?}", e));
+        }
+    };
+    // 取得結果からアプリの詳細情報を抽出
+    let app = match app_res.Product() {
+        Ok(app) => app,
+        Err(e) => {
+            warn!("アプリの詳細情報の取得に失敗しました (Error: {e})");
+            return Err(format!("{:?}", e));
+        }
+    };
+    // Microsoft Store ID
+    let id = match app.StoreId() {
+        Ok(id) => id.to_string(),
+        Err(e) => {
+            warn!("Microsoft Store IDの取得に失敗しました (Error: {e})");
+            return Err(format!("{:?}", e));
+        }
+    };
+    // アプリタイトル
+    let title = match app.Title() {
+        Ok(title) => title.to_string(),
+        Err(e) => {
+            warn!("アプリタイトルの取得に失敗しました (Error: {e})");
+            return Err(format!("{:?}", e));
+        }
+    };
+    
+    Ok(StoreAppInfo { id, title })
+}
 
+pub(crate) fn fetch_store_addons() -> Result<StoreAddOns, String> {
+    // WindowsRT API対応：COM STA初期化と自動解放（ComGuard）
+    unsafe { let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED);}
+    struct ComGuard;
+    impl Drop for ComGuard { fn drop(&mut self) { unsafe { CoUninitialize();}}}
+    let _com_guard = ComGuard;
+
+    // StoreContextの取得
+    let ctx = match StoreContext::GetDefault() {
+        Ok(ctx) => ctx,
+        Err(e) => {
+            warn!("StoreContextの取得に失敗しました (Error: {e})");
+            return Err(format!("{:?}", e));
+        }
+    };
+
+    // アドオン情報取得操作の生成
     let mut add_ons: Vec<StoreAddOn> = Vec::new();
-    let kinds: IIterable<HSTRING> = IIterable::from(vec![HSTRING::from("Durable")]);
-    let addon_op = ctx.GetUserCollectionAsync(&kinds).map_err(|e| format!("{:?}", e))?;
-    let addon_res = block_on(addon_op.into_future()).map_err(|e| format!("{:?}", e))?;
+    let kinds: IIterable<HSTRING> = IIterable::from(Vec::<HSTRING>::new());
+    let addon_op = match ctx.GetUserCollectionAsync(&kinds) {
+        Ok(op) => op,
+        Err(e) => {
+            warn!("アドオン情報の取得操作の生成に失敗しました (Error: {e})");
+            return Err(format!("{:?}", e));
+        }
+    };
 
-    if let Ok(products) = addon_res.Products() {
-        if let Ok(it) = products.First() {
-            while it.HasCurrent().unwrap_or(false) {
-                if let Ok(pair) = it.Current() {
-                    if let Ok(addon_id) = pair.Key() {
-                        if let Ok(addon_product) = pair.Value() {
-                            if let Ok(addon_title) = addon_product.Title() {
-                                add_ons.push(StoreAddOn {
-                                    id: addon_id.to_string(),
-                                    title: addon_title.to_string(),
-                                    is_owned: true,
-                                });
-                            }
-                        }
-                    }
-                }
-                it.MoveNext().ok();
+    // 非同期操作を実行し、アドオン情報の取得を待機
+    let addon_res = match block_on(addon_op.into_future()) {
+        Ok(res) => res,
+        Err(e) => {
+            warn!("アドオン情報の取得に失敗しました (Error: {e})");
+            return Err(format!("{:?}", e));
+        }
+    };
+
+    // アドオンのマップ(Products)とイテレータを取得
+    let Ok(products) = addon_res.Products() else {
+        return Ok(StoreAddOns { add_ons }) 
+    };
+    let Ok(it) = products.First() else {
+        return Ok(StoreAddOns { add_ons })
+    };
+
+    // イテレータを使ってアドオン情報を収集
+    while it.HasCurrent().unwrap_or(false) {
+        if let Ok(pair) = it.Current() {
+            if let Some(addon) = extract_addon_info(pair) {
+                add_ons.push(addon);
             }
         }
+        it.MoveNext().ok();
     }
 
-    Ok(StoreAppInfo { id, title, add_ons })
+    Ok(StoreAddOns { add_ons })
+}
+
+// アドオン情報を抽出するヘルパー関数
+fn extract_addon_info(pair: windows_collections::IKeyValuePair<HSTRING, windows::Services::Store::StoreProduct>) -> Option<StoreAddOn> {
+    let addon_id = pair.Key().ok()?.to_string(); // アドオンIDの取得
+    let product = pair.Value().ok()?; // StoreProductオブジェクトの取得
+    let title = product.Title().ok()?.to_string(); // アドオンタイトルの取得
+
+    Some(StoreAddOn {
+        id: addon_id,
+        title,
+        is_owned: true,
+    })
 }
