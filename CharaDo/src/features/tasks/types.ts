@@ -11,14 +11,14 @@ export const ImportanceLevel = {
 	Normal: "Normal",
 	Important: "Important",
 	Crucial: "Crucial",
-} as const;
+} as const satisfies Record<string, Importance>;
 
 export const StatusLevel = {
 	ToDo: "ToDo",
 	Waiting: "Waiting",
 	WantDo: "WantDo",
 	Doing: "Doing",
-} as const;
+} as const satisfies Record<string, Status>;
 
 // 日本語版マップ
 export const ImportanceLevelMap: Record<Importance, string> = {
