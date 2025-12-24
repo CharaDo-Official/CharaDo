@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Character, MediaSource } from "@features/characters/types";
+import { Character, MediaSource, NecessaryMedia, OptionalMedia } from "@features/characters/types";
 import { useFileSelect } from "@hooks/useFileSelect";
 
 interface CharacterEditModalProps {
@@ -56,11 +56,15 @@ export default function CharacterEditModal({ isOpen, onClose, onSave, initialDat
 	// 選択済みかどうかを判定するヘルパー（簡易）
 	const isMediaSelected = (category: "necessary" | "optional", key: string): boolean => {
 		if (category === "necessary") {
-			const media = formData.necessary_media as any;
-			return media && media[key] && (media[key].External || media[key].Embedded);
+			const media = formData.necessary_media as NecessaryMedia | undefined;
+			if (!media) return false;
+			const src = media[key as keyof NecessaryMedia];
+			return !!(src && (("External" in src && src.External) || ("Embedded" in src && src.Embedded)));
 		} else {
-			const media = formData.optional_media as any;
-			return media && media[key] && (media[key].External || media[key].Embedded);
+			const media = formData.optional_media as OptionalMedia | undefined;
+			if (!media) return false;
+			const src = media[key as keyof OptionalMedia];
+			return !!(src && (("External" in src && src.External) || ("Embedded" in src && src.Embedded)));
 		}
 	};
 
@@ -88,7 +92,7 @@ export default function CharacterEditModal({ isOpen, onClose, onSave, initialDat
 					necessary_media: {
 						...prev.necessary_media,
 						[key]: mediaSource
-					} as any // 型定義が複雑なため一時的にanyキャスト（実際には厳密にやるべき）
+					} as NecessaryMedia
 				};
 			} else {
 				return {
@@ -96,7 +100,7 @@ export default function CharacterEditModal({ isOpen, onClose, onSave, initialDat
 					optional_media: {
 						...prev.optional_media,
 						[key]: mediaSource
-					} as any
+					} as OptionalMedia
 				};
 			}
 		});
@@ -104,20 +108,23 @@ export default function CharacterEditModal({ isOpen, onClose, onSave, initialDat
 	
 	const getMediaLabel = (category: "necessary" | "optional", key: string): string => {
 		if (category === "necessary") {
-			const media = formData.necessary_media as any;
-			if (media && media[key]) {
-				// オブジェクトの中身を表示用文字列にする簡易処理
-				const src = media[key];
-				if (src.External) return src.External;
-				if (src.Embedded) return "Embedded Media";
+			const media = formData.necessary_media as NecessaryMedia | undefined;
+			if (media) {
+				const src = media[key as keyof NecessaryMedia];
+				if (src) {
+					if ("External" in src) return src.External;
+					if ("Embedded" in src) return "Embedded Media";
+				}
 				return "未選択";
 			}
 		} else {
-			const media = formData.optional_media as any;
-			if (media && media[key]) {
-				const src = media[key];
-				if (src.External) return src.External;
-				if (src.Embedded) return "Embedded Media";
+			const media = formData.optional_media as OptionalMedia | undefined;
+			if (media) {
+				const src = media[key as keyof OptionalMedia];
+				if (src) {
+					if ("External" in src) return src.External;
+					if ("Embedded" in src) return "Embedded Media";
+				}
 				return "未選択";
 			}
 		}

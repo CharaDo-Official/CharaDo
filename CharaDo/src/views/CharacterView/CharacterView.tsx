@@ -41,7 +41,8 @@ export default function CharacterView() {
 			const updatedCharacter = { ...editingCharacter, ...data } as Character;
 			
 			// サムネイルを通常時の画像で代用（サムネイルが未設定の場合）
-			if (!updatedCharacter.thumbnail_source || (updatedCharacter.thumbnail_source as any).External === "") {
+			if (!updatedCharacter.thumbnail_source || 
+				("External" in updatedCharacter.thumbnail_source && updatedCharacter.thumbnail_source.External === "")) {
 				if (updatedCharacter.necessary_media.usual) {
 					updatedCharacter.thumbnail_source = updatedCharacter.necessary_media.usual;
 				}
