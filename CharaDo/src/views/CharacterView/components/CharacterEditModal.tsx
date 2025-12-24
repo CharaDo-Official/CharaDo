@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Character, MediaSource } from "@features/characters/types";
-import { useFileSelect } from "@features/characters/hooks";
+import { useFileSelect } from "@hooks/useFileSelect";
 
 interface CharacterEditModalProps {
 	isOpen: boolean;
