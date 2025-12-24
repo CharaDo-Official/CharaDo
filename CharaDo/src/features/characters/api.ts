@@ -1,6 +1,6 @@
 // バックエンドとの通信を担当
 
-import { invoke } from "@tauri-apps/api/core";
+import { safeInvoke } from "@lib/api-client";
 import type { Character, CharacterRaw } from "./types";
 
 // 生データ -> 整形データ
@@ -23,7 +23,7 @@ function denormalize(data: Character): CharacterRaw {
  * @returns キャラクターの配列
  */
 export async function getAllCharacters(): Promise<Character[]> {
-	const rawCharacters: CharacterRaw[] = await invoke("get_all_characters");
+	const rawCharacters: CharacterRaw[] = await safeInvoke("get_all_characters");
 	return rawCharacters.map(normalize);
 }
 
@@ -35,7 +35,7 @@ export async function getAllCharacters(): Promise<Character[]> {
  */
 export async function getCharacter(id: number, isStandard: boolean): Promise<Character | null> {
 	// Rust側の引数名は snake_case (id, is_standard)
-	const rawCharacter: CharacterRaw | null = await invoke("get_character", { id, is_standard: isStandard });
+	const rawCharacter: CharacterRaw | null = await safeInvoke("get_character", { id, is_standard: isStandard });
 	if (rawCharacter === null) {
 		return null;
 	}
@@ -48,7 +48,7 @@ export async function getCharacter(id: number, isStandard: boolean): Promise<Cha
  * @returns 追加されたキャラクターID
  */
 export async function addCharacter(character: Character): Promise<number> {
-	return await invoke("add_character", { character: denormalize(character) });
+	return await safeInvoke("add_character", { character: denormalize(character) });
 }
 
 /**
@@ -56,7 +56,7 @@ export async function addCharacter(character: Character): Promise<number> {
  * @param character キャラクター
  */
 export async function updateCharacter(character: Character): Promise<void> {
-	await invoke("update_character", { character: denormalize(character) });
+	await safeInvoke("update_character", { character: denormalize(character) });
 }
 
 /**
@@ -64,6 +64,6 @@ export async function updateCharacter(character: Character): Promise<void> {
  * @param id キャラクターID
  */
 export async function deleteCharacter(id: number): Promise<void> {
-	await invoke("delete_character", { id });
+	await safeInvoke("delete_character", { id });
 }
 

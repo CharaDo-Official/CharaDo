@@ -1,6 +1,6 @@
 // バックエンドとの通信を担当
 
-import { invoke } from "@tauri-apps/api/core";
+import { safeInvoke } from "@lib/api-client";
 import type { TaskRaw, Importance, Status, Task } from "./types";
 
 // Rustデータ -> TSデータ
@@ -47,7 +47,7 @@ function denormalize(data: Task): TaskRaw {
  */
 export async function getAllTasks(): Promise<Task[]> {
 	// Rustから生データを取得
-	const rawTasks: TaskRaw[] = await invoke("get_all_tasks");
+	const rawTasks: TaskRaw[] = await safeInvoke("get_all_tasks");
 	// 整形
 	return rawTasks.map(normalize);
 }
@@ -58,7 +58,7 @@ export async function getAllTasks(): Promise<Task[]> {
  * @returns タスク
  */
 export async function getTask(id: number): Promise<Task | null> {
-	const rawTask: TaskRaw | null = await invoke("get_task", { id });
+	const rawTask: TaskRaw | null = await safeInvoke("get_task", { id });
 	if (rawTask === null) {
 		return null;
 	}
@@ -71,7 +71,7 @@ export async function getTask(id: number): Promise<Task | null> {
  * @returns 追加されたタスクID
  */
 export async function addTask(task: Task): Promise<number> {
-	return await invoke("add_task", { task: denormalize(task) });
+	return await safeInvoke("add_task", { task: denormalize(task) });
 }
 
 /**
@@ -79,7 +79,7 @@ export async function addTask(task: Task): Promise<number> {
  * @param task タスク
  */
 export async function updateTask(task: Task): Promise<void> {
-	await invoke("update_task", { task: denormalize(task) });
+	await safeInvoke("update_task", { task: denormalize(task) });
 }
 
 /**
@@ -87,5 +87,5 @@ export async function updateTask(task: Task): Promise<void> {
  * @param id タスクID
  */
 export async function deleteTask(id: number): Promise<void> {
-	await invoke("delete_task", { id });
+	await safeInvoke("delete_task", { id });
 }
