@@ -10,5 +10,5 @@ pub fn test() {
     obfstr!(env!("ADDON_ID_DATA_EXPANSION"))
   );
 
-	info!("VIDEO_DATA length: {}", VIDEO_DATA.len());
+  info!("VIDEO_DATA length: {}", VIDEO_DATA.len());
 }

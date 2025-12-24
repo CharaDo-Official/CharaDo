@@ -1,15 +1,15 @@
-use tauri::State;
-use crate::state::AppState;
 use crate::entities::character::Character;
 use crate::error::UserError;
 use crate::services::character_service;
+use crate::state::AppState;
+use tauri::State;
 
 /**
  * 全てのキャラクターを取得
  */
 #[tauri::command]
 pub fn get_all_characters(state: State<AppState>) -> Result<Vec<Character>, UserError> {
-	character_service::get_all_characters(state)
+  character_service::get_all_characters(state)
 }
 
 /**
@@ -19,7 +19,7 @@ pub fn get_all_characters(state: State<AppState>) -> Result<Vec<Character>, User
  */
 #[tauri::command]
 pub fn get_character(state: State<AppState>, id: u32, is_standard: bool) -> Option<Character> {
-	character_service::get_character(state, id, is_standard)
+  character_service::get_character(state, id, is_standard)
 }
 
 /**
@@ -27,7 +27,7 @@ pub fn get_character(state: State<AppState>, id: u32, is_standard: bool) -> Opti
  */
 #[tauri::command]
 pub fn add_character(state: State<AppState>, character: Character) -> Result<u32, UserError> {
-	character_service::add_character(state, character)
+  character_service::add_character(state, character)
 }
 
 /**
@@ -35,7 +35,7 @@ pub fn add_character(state: State<AppState>, character: Character) -> Result<u32
  */
 #[tauri::command]
 pub fn delete_character(state: State<AppState>, id: u32) -> Result<(), UserError> {
-	character_service::delete_character(state, id)
+  character_service::delete_character(state, id)
 }
 
 /**
@@ -43,11 +43,5 @@ pub fn delete_character(state: State<AppState>, id: u32) -> Result<(), UserError
  */
 #[tauri::command]
 pub fn update_character(state: State<AppState>, character: Character) -> Result<(), UserError> {
-	character_service::update_character(state, character)
+  character_service::update_character(state, character)
 }
-
-
-
-
-
-

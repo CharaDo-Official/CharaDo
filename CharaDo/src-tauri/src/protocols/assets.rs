@@ -1,5 +1,5 @@
-use rust_embed::RustEmbed;
 use log::info;
+use rust_embed::RustEmbed;
 use tauri::http::{header, Request, Response};
 
 #[derive(RustEmbed)]
@@ -14,7 +14,7 @@ pub fn media_protocol_handler(request: &Request<Vec<u8>>) -> Response<Vec<u8>> {
   // URLデコード
   let decoded_path = percent_encoding::percent_decode_str(path).decode_utf8_lossy();
 
-	info!("decoded_path: {}", decoded_path);
+  info!("decoded_path: {}", decoded_path);
 
   match EmbeddedAssets::get(decoded_path.as_ref()) {
     Some(content) => {

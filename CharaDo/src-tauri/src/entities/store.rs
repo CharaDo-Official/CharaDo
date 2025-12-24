@@ -1,11 +1,11 @@
-use obfstr::obfstr;
 use log::warn;
+use obfstr::obfstr;
 use serde::{Deserialize, Serialize};
 
 /// アドオンの種類
 #[derive(PartialEq, Eq, Clone, Copy, Debug)]
 pub enum AddonType {
-	/// データ拡張パック
+  /// データ拡張パック
   DataExpansion,
   /// モーション拡張パック
   MotionExpansion,
@@ -18,23 +18,23 @@ pub enum AddonType {
 }
 
 impl AddonType {
-	/// IDからAddonTypeを取得
-	pub fn from_id(id: &str) -> Option<AddonType> {
-		if id == obfstr!(env!("ADDON_ID_DATA_EXPANSION")) {
-			Some(AddonType::DataExpansion)
-		} else if id == obfstr!(env!("ADDON_ID_MOTION_EXPANSION")) {
-			Some(AddonType::MotionExpansion)
-		} else if id == obfstr!(env!("ADDON_ID_CUSTOM_FRAME_1")) {
-			Some(AddonType::CustomFrameAdd1)
-		} else if id == obfstr!(env!("ADDON_ID_CUSTOM_FRAME_2")) {
-			Some(AddonType::CustomFrameAdd2)
-		} else if id == obfstr!(env!("ADDON_ID_CUSTOM_FRAME_4")) {
-			Some(AddonType::CustomFrameAdd4)
-		} else {
-			warn!("AddonType::from_id: unknown id={:?}", id);
-			None
-		}
-	}
+  /// IDからAddonTypeを取得
+  pub fn from_id(id: &str) -> Option<AddonType> {
+    if id == obfstr!(env!("ADDON_ID_DATA_EXPANSION")) {
+      Some(AddonType::DataExpansion)
+    } else if id == obfstr!(env!("ADDON_ID_MOTION_EXPANSION")) {
+      Some(AddonType::MotionExpansion)
+    } else if id == obfstr!(env!("ADDON_ID_CUSTOM_FRAME_1")) {
+      Some(AddonType::CustomFrameAdd1)
+    } else if id == obfstr!(env!("ADDON_ID_CUSTOM_FRAME_2")) {
+      Some(AddonType::CustomFrameAdd2)
+    } else if id == obfstr!(env!("ADDON_ID_CUSTOM_FRAME_4")) {
+      Some(AddonType::CustomFrameAdd4)
+    } else {
+      warn!("AddonType::from_id: unknown id={:?}", id);
+      None
+    }
+  }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]

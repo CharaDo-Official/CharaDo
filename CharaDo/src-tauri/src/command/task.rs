@@ -1,8 +1,8 @@
-use tauri::State;
-use crate::state::AppState;
 use crate::entities::task::Task;
 use crate::error::UserError;
 use crate::services::task_service;
+use crate::state::AppState;
+use tauri::State;
 
 /**
  * 全てのタスクを取得
@@ -17,7 +17,7 @@ pub fn get_all_tasks(state: State<AppState>) -> Result<Vec<Task>, UserError> {
  */
 #[tauri::command]
 pub fn get_task(state: State<AppState>, id: u32) -> Result<Option<Task>, UserError> {
-	task_service::get_task(state, id)
+  task_service::get_task(state, id)
 }
 
 /**
@@ -25,7 +25,7 @@ pub fn get_task(state: State<AppState>, id: u32) -> Result<Option<Task>, UserErr
  */
 #[tauri::command]
 pub fn add_task(state: State<AppState>, task: Task) -> Result<u32, UserError> {
-	task_service::add_task(state, task)
+  task_service::add_task(state, task)
 }
 
 /**
@@ -33,7 +33,7 @@ pub fn add_task(state: State<AppState>, task: Task) -> Result<u32, UserError> {
  */
 #[tauri::command]
 pub fn delete_task(state: State<AppState>, id: u32) -> Result<(), UserError> {
-	task_service::delete_task(state, id)
+  task_service::delete_task(state, id)
 }
 
 /**
@@ -41,5 +41,5 @@ pub fn delete_task(state: State<AppState>, id: u32) -> Result<(), UserError> {
  */
 #[tauri::command]
 pub fn update_task(state: State<AppState>, task: Task) -> Result<(), UserError> {
-	task_service::update_task(state, task)
+  task_service::update_task(state, task)
 }

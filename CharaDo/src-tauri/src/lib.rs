@@ -3,35 +3,32 @@ use tauri_plugin_log::{Builder as LogBuilder, Target, TargetKind};
 
 mod command;
 mod config;
+mod datas;
 mod entities;
 mod error;
-mod repository;
-mod state;
 mod protocols;
-mod datas;
+mod repository;
 mod services;
+mod state;
 
 use command::character;
+use command::store;
 use command::task;
 use command::user;
-use command::store;
-use state::AppState;
 use protocols::assets;
-
+use state::AppState;
 
 mod test;
 fn lib_main() {
-	test::test();
+  test::test();
 }
-
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
   tauri::Builder::default()
-		// アセット埋め込み取得用プロトコル登録
-    .register_uri_scheme_protocol("assets", |_app, req| {
-      assets::media_protocol_handler(&req)
-    })
+    .plugin(tauri_plugin_dialog::init())
+    // アセット埋め込み取得用プロトコル登録
+    .register_uri_scheme_protocol("assets", |_app, req| assets::media_protocol_handler(&req))
     // Loggerプラグインの初期化
     .plugin(
       LogBuilder::new()

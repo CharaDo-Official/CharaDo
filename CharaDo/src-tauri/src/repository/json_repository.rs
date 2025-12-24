@@ -24,14 +24,14 @@ where
 {
   /// 指定リポジトリに接続
   pub fn connect(path: &PathBuf) -> Result<Self, UserError> {
-		// ファイルが存在しない場合は初期化
+    // ファイルが存在しない場合は初期化
     if !path.exists() {
       return Self::initialize(path);
     }
 
     // ファイル読み込み
-		let file = fs::File::open(path)?;
-		let reader = BufReader::new(file);
+    let file = fs::File::open(path)?;
+    let reader = BufReader::new(file);
 
     let content = match serde_json::from_reader(reader) {
       Ok(items) => items,
@@ -59,7 +59,7 @@ where
       warn!("バックアップに失敗しました: {e}");
       return Err(UserError::IoError(e));
     }
-		
+
     Ok(backup_path)
   }
 
@@ -123,12 +123,12 @@ where
     }
   }
 
-	/// 全件更新
-	pub fn replace(&mut self, items: Vec<T>) -> Result<(), UserError> {
-		self.items = items;
-		self.save()?;
-		Ok(())
-	}
+  /// 全件更新
+  pub fn replace(&mut self, items: Vec<T>) -> Result<(), UserError> {
+    self.items = items;
+    self.save()?;
+    Ok(())
+  }
 
   /// 次の利用可能なIDを取得
   pub fn next_id(&self) -> u32 {

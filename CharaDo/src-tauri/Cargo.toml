@@ -54,3 +54,4 @@ rust-embed = "8.5"
 mime_guess = "2.0"
 percent-encoding = "2.3.2"
 url = { version = "2.5.7", features = ["serde"] }
+tauri-plugin-dialog = "2"

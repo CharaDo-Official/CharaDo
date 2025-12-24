@@ -75,31 +75,31 @@ impl Character {
     self.name.is_empty()
   }
 
-	/// アプリ標準キャラクターか
-	pub fn is_standard(&self) -> bool {
-		self.is_standard
-	}
+  /// アプリ標準キャラクターか
+  pub fn is_standard(&self) -> bool {
+    self.is_standard
+  }
 
-	/// セリフを取得
-	pub fn get_dialogue(&self) -> Dialogue {
-		self.dialogues.clone()
-	}
+  /// セリフを取得
+  pub fn get_dialogue(&self) -> Dialogue {
+    self.dialogues.clone()
+  }
 
-	/// セリフを設定
-	pub fn set_dialogue(&mut self, dialogue: Dialogue) {
-		self.dialogues = dialogue;
-	}
+  /// セリフを設定
+  pub fn set_dialogue(&mut self, dialogue: Dialogue) {
+    self.dialogues = dialogue;
+  }
 
-	/// モーションを取得
-	pub fn get_medias(&self) -> (NecessaryMedia, OptionalMedia) {
-		(self.necessary_media.clone(), self.optional_media.clone())
-	}
+  /// モーションを取得
+  pub fn get_medias(&self) -> (NecessaryMedia, OptionalMedia) {
+    (self.necessary_media.clone(), self.optional_media.clone())
+  }
 
-	/// モーションを設定
-	pub fn set_medias(&mut self, medias: (NecessaryMedia, OptionalMedia)) {
-		self.necessary_media = medias.0;
-		self.optional_media = medias.1;
-	}
+  /// モーションを設定
+  pub fn set_medias(&mut self, medias: (NecessaryMedia, OptionalMedia)) {
+    self.necessary_media = medias.0;
+    self.optional_media = medias.1;
+  }
 }
 
 impl HasId for Character {
@@ -158,7 +158,10 @@ impl NecessaryMedia {
 
 impl OptionalMedia {
   pub fn new(off_stage: Url, touch: Url) -> Self {
-    Self { off_stage: Some(MediaSource::Embedded(off_stage)), touch: Some(MediaSource::Embedded(touch)) }
+    Self {
+      off_stage: Some(MediaSource::Embedded(off_stage)),
+      touch: Some(MediaSource::Embedded(touch)),
+    }
   }
 }
 

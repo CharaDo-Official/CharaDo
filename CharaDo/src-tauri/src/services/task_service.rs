@@ -29,12 +29,12 @@ pub fn get_task(state: State<AppState>, id: u32) -> Result<Option<Task>, UserErr
 pub fn add_task(state: State<AppState>, task: Task) -> Result<u32, UserError> {
   match state.task_repo.write() {
     Ok(mut repo) => {
-			// 空のタイトルは受け付けない
+      // 空のタイトルは受け付けない
       if task.is_title_empty() {
         return Err(UserError::ValidationError("Title is empty".to_string()));
       }
       repo.add(task)
-    },
+    }
     Err(e) => Err(e.into()),
   }
 }
