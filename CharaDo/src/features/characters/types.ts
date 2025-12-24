@@ -1,21 +1,20 @@
-// Rust側から返される型
+// Rust側から返される生データ
 import type { 
 	Character as CharacterRaw,
-	AnimationKind,
-	NecessaryAnimation,
-	OptionalAnimation,
-	Dialogue
+	Dialogue,
+	MediaSource,
+	NecessaryMedia,
+	OptionalMedia
 } from "@bindings/character";
 
 export type { 
 	CharacterRaw,
-	AnimationKind,
-	NecessaryAnimation,
-	OptionalAnimation,
-	Dialogue 
+	Dialogue,
+	MediaSource,
+	NecessaryMedia,
+	OptionalMedia
 };
 
 // フロントで扱う整形後の型
-// 現状はRust側の型とほぼ同じだが、将来的な拡張や変換のために定義しておく
+// 現状はRust側の型と構造は同じだが、将来的な拡張（Date変換など）のために別名で定義
 export type Character = CharacterRaw;
-

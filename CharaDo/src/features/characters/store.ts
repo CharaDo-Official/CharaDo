@@ -8,7 +8,7 @@ interface CharacterState {
 	loading: boolean;
 	// Actions
 	fetchCharacters: () => Promise<void>;
-	getCharacter: (id: number) => Promise<Character | null>;
+	getCharacter: (id: number, isStandard: boolean) => Promise<Character | null>;
 	addCharacter: (character: Character) => Promise<number>;
 	updateCharacter: (character: Character) => Promise<void>;
 	deleteCharacter: (id: number) => Promise<void>;
@@ -31,10 +31,10 @@ export const useCharacterStore = create<CharacterState>((set, get) => ({
 		}
 	},
 
-	getCharacter: async (id: number) => {
+	getCharacter: async (id: number, isStandard: boolean) => {
 		set({ loading: true });
 		try {
-			const character = await api.getCharacter(id);
+			const character = await api.getCharacter(id, isStandard);
 			return character;
 		} finally {
 			set({ loading: false });

@@ -30,11 +30,16 @@ export async function getAllCharacters(): Promise<Character[]> {
 /**
  * 特定のキャラクターを取得
  * @param id キャラクターID
+ * @param isStandard アプリ標準キャラクターかどうか
  * @returns キャラクター
  */
-export async function getCharacter(id: number): Promise<Character | null> {
-	const rawCharacter: CharacterRaw | null = await invoke("get_character", { id });
-	return rawCharacter ? normalize(rawCharacter) : null;
+export async function getCharacter(id: number, isStandard: boolean): Promise<Character | null> {
+	// Rust側の引数名は snake_case (id, is_standard)
+	const rawCharacter: CharacterRaw | null = await invoke("get_character", { id, is_standard: isStandard });
+	if (rawCharacter === null) {
+		return null;
+	}
+	return normalize(rawCharacter);
 }
 
 /**
