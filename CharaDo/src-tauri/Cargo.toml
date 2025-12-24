@@ -18,6 +18,8 @@ crate-type = ["staticlib", "cdylib", "rlib"]
 
 [build-dependencies]
 tauri-build = { version = "2", features = [] }
+# env for addOn
+dotenvy = "0.15"
 
 [dependencies]
 tauri = { version = "2", features = [] }
@@ -45,3 +47,11 @@ windows = { version = "0.61.3", features = [
 windows-future = "0.2.1"
 windows-collections = "0.2.0"
 futures = "0.3"
+# env obfuscation
+obfstr = "0.4"
+# enbed content
+rust-embed = "8.5"
+mime_guess = "2.0"
+percent-encoding = "2.3.2"
+url = { version = "2.5.7", features = ["serde"] }
+tauri-plugin-dialog = "2"

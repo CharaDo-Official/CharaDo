@@ -3,7 +3,7 @@ import { type Task, type Status, ImportanceLevel } from "@features/tasks/types";
 
 interface QuickTaskAddProps {
 	status: Status;
-	onAdd: (task: Task) => Promise<void>;
+	onAdd: (task: Task) => Promise<number>;
 }
 
 export const QuickTaskAdd: React.FC<QuickTaskAddProps> = ({ status, onAdd }) => {

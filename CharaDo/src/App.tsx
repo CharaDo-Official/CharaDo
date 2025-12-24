@@ -2,7 +2,9 @@ import { useTab } from "@hooks/useTab";
 import { TabKey } from "@config/tabs";
 import TabBar from "@components/layout/TabBar";
 import TaskView from "@views/TaskView";
+import CharacterView from "@views/CharacterView";
 import DebugView from "@views/DebugView";
+import PlanView from "@views/PlanView";
 
 function App() {
 	const { activeTab, selectTab } = useTab("task");
@@ -11,6 +13,10 @@ function App() {
 		switch (tab) {
 		case "task":
 			return <TaskView />;
+		case "character":
+			return <CharacterView />;
+		case "plan":
+			return <PlanView />;
 		case "debug":
 			return <DebugView />;
 		}

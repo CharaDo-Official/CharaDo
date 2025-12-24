@@ -6,7 +6,7 @@ import { TaskList } from "./TaskList";
 interface TaskColumnProps {
 	status: Status;
 	tasks: Task[];
-	onAdd?: (task: Task) => Promise<void>;
+	onAdd?: (task: Task) => Promise<number>;
 	onTaskClick: (task: Task) => void;
 	bgColor?: string;
 	showAddForm?: boolean;

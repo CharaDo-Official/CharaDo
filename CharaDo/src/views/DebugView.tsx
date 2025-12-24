@@ -40,6 +40,12 @@ const DebugView: React.FC = () => {
 	return (
 		<div>
 			<h2>Debug View</h2>
+			<video
+				src="http://assets.localhost/tumugi/達成時.webm"
+				controls
+				width="300"
+			/>
+			<img src="http://assets.localhost/tumugi/thumbnail.png" alt="紬" />
 			<div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
 				<button onClick={testLog}>
 					Test Log
@@ -48,14 +54,14 @@ const DebugView: React.FC = () => {
 					{loading ? "Loading..." : "Get Store App Info"}
 				</button>
 			</div>
-			
+
 			{appInfo && (
 				<div style={{ textAlign: "left" }}>
 					<h3>Result:</h3>
-					<pre style={{ 
-						marginTop: 12, 
-						padding: 8, 
-						border: "1px solid #ccc", 
+					<pre style={{
+						marginTop: 12,
+						padding: 8,
+						border: "1px solid #ccc",
 						borderRadius: 6,
 						backgroundColor: "#f5f5f5",
 						color: "#333",

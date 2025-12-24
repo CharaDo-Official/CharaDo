@@ -39,8 +39,7 @@ export function useTaskActions() {
 	const getTask = useTaskStore((state) => state.getTask);
 	const addTask = useTaskStore((state) => state.addTask);
 	const updateTask = useTaskStore((state) => state.updateTask);
-	const updateTasks = useTaskStore((state) => state.updateTasks);
 	const deleteTask = useTaskStore((state) => state.deleteTask);
 
-	return { fetchTasks, getTask, addTask, updateTask, updateTasks, deleteTask };
+	return { fetchTasks, getTask, addTask, updateTask, deleteTask };
 }
