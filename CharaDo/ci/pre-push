@@ -3,4 +3,4 @@
 cd CharaDo
 
 npm run lint
-yarn jest
+npm run test

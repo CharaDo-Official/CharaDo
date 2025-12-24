@@ -41,6 +41,11 @@ jobs:
       - name: run ESLint
         run: npm run lint
         working-directory: ${{ env.TAURI_APP }}
+
+			# Jest
+      - name: run Jest
+        run: npm run test
+        working-directory: ${{ env.TAURI_APP }}
       
       # Tauri/Rust
       - name: rustc version
