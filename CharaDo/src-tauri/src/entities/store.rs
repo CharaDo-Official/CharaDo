@@ -1,9 +1,11 @@
 use log::warn;
 use obfstr::obfstr;
 use serde::{Deserialize, Serialize};
+use ts_rs::TS;
 
 /// アドオンの種類
-#[derive(PartialEq, Eq, Clone, Copy, Debug)]
+#[derive(TS, Serialize, Deserialize, Clone, Copy, Debug, PartialEq, Eq)]
+#[ts(export, export_to = "store.ts")]
 pub enum AddonType {
   /// データ拡張パック
   DataExpansion,

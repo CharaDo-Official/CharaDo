@@ -2,6 +2,9 @@ use crate::entities::store::AddonType;
 use crate::error::UserError;
 use crate::repository::store::get_store_info_dev;
 
+/**
+ * アドオンが所持されているかを取得
+ */
 pub fn is_addon_owned(target_addon_type: AddonType) -> Result<bool, UserError> {
   // アドオン取得
   let addons = get_store_info_dev()?.add_ons;
@@ -18,4 +21,20 @@ pub fn is_addon_owned(target_addon_type: AddonType) -> Result<bool, UserError> {
   }
   // 指定されたAddonTypeが見つからなかった場合はfalse
   Ok(false)
+}
+
+/**
+ * 所持しているアドオンを取得
+ */
+pub fn get_owned_addons() -> Result<Vec<AddonType>, UserError> {
+  let mut owned_addons = Vec::new();
+  let addons = get_store_info_dev()?.add_ons;
+  for addon in addons {
+    if addon.is_owned {
+      if let Some(addon_type) = AddonType::from_id(&addon.id) {
+        owned_addons.push(addon_type);
+      }
+    }
+  }
+  Ok(owned_addons)
 }
