@@ -69,13 +69,13 @@ const DebugView: React.FC = () => {
 			<div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
 				<button onClick={testLog}>
 					Test Log
-				</button>
+				</button><br></br>
 				<button onClick={getStoreInfo} disabled={loading}>
 					{loading ? "Loading..." : "Get Store App Info"}
-				</button>
+				</button><br></br>
 				<button onClick={getStoreAddons} disabled={loading}>
 					{loading ? "Loading..." : "Get Store AddOns"}
-				</button>
+				</button><br></br>
 			</div>
 			
 			{appInfo && (

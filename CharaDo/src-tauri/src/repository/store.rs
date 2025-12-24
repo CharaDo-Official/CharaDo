@@ -8,7 +8,7 @@ use crate::error::UserError;
 use crate::entities::store::{StoreAppInfo, StoreAddOn, StoreAddOns};
 use log::{warn};
 
-pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, String> {
+pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, UserError> {
     // WindowsRT API対応：COM STA初期化と自動解放（ComGuard）
     unsafe { let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED);}
     struct ComGuard;
@@ -20,7 +20,7 @@ pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, String> {
         Ok(ctx) => ctx,
         Err(e) => {
             warn!("StoreContextの取得に失敗しました (Error: {e})");
-            return Err(format!("{:?}", e));
+            return Err(UserError::WinApiError(format!("{:?}", e)));
         }
     };
 
@@ -29,7 +29,7 @@ pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, String> {
         Ok(op) => op,
         Err(e) => {
             warn!("アプリ情報の取得操作の生成に失敗しました (Error: {e})");
-            return Err(format!("{:?}", e));
+            return Err(UserError::WinApiError(format!("{:?}", e)));
         }
     };
     // 非同期操作を実行し、アプリ情報の取得を待機
@@ -37,7 +37,7 @@ pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, String> {
         Ok(res) => res,
         Err(e) => {
             warn!("アプリ情報の取得に失敗しました (Error: {e})");
-            return Err(format!("{:?}", e));
+            return Err(UserError::WinApiError(format!("{:?}", e)));
         }
     };
     // 取得結果からアプリの詳細情報を抽出
@@ -45,7 +45,7 @@ pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, String> {
         Ok(app) => app,
         Err(e) => {
             warn!("アプリの詳細情報の取得に失敗しました (Error: {e})");
-            return Err(format!("{:?}", e));
+            return Err(UserError::WinApiError(format!("{:?}", e)));
         }
     };
     // Microsoft Store ID
@@ -53,7 +53,7 @@ pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, String> {
         Ok(id) => id.to_string(),
         Err(e) => {
             warn!("Microsoft Store IDの取得に失敗しました (Error: {e})");
-            return Err(format!("{:?}", e));
+            return Err(UserError::WinApiError(format!("{:?}", e)));
         }
     };
     // アプリタイトル
@@ -61,14 +61,14 @@ pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, String> {
         Ok(title) => title.to_string(),
         Err(e) => {
             warn!("アプリタイトルの取得に失敗しました (Error: {e})");
-            return Err(format!("{:?}", e));
+            return Err(UserError::WinApiError(format!("{:?}", e)));
         }
     };
-    
+
     Ok(StoreAppInfo { id, title })
 }
 
-pub(crate) fn fetch_store_addons() -> Result<StoreAddOns, String> {
+pub(crate) fn fetch_store_addons() -> Result<StoreAddOns, UserError> {
     // WindowsRT API対応：COM STA初期化と自動解放（ComGuard）
     unsafe { let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED);}
     struct ComGuard;
@@ -80,7 +80,7 @@ pub(crate) fn fetch_store_addons() -> Result<StoreAddOns, String> {
         Ok(ctx) => ctx,
         Err(e) => {
             warn!("StoreContextの取得に失敗しました (Error: {e})");
-            return Err(format!("{:?}", e));
+            return Err(UserError::WinApiError(format!("{:?}", e)));
         }
     };
 
@@ -91,7 +91,7 @@ pub(crate) fn fetch_store_addons() -> Result<StoreAddOns, String> {
         Ok(op) => op,
         Err(e) => {
             warn!("アドオン情報の取得操作の生成に失敗しました (Error: {e})");
-            return Err(format!("{:?}", e));
+            return Err(UserError::WinApiError(format!("{:?}", e)));
         }
     };
 
@@ -100,7 +100,7 @@ pub(crate) fn fetch_store_addons() -> Result<StoreAddOns, String> {
         Ok(res) => res,
         Err(e) => {
             warn!("アドオン情報の取得に失敗しました (Error: {e})");
-            return Err(format!("{:?}", e));
+            return Err(UserError::WinApiError(format!("{:?}", e)));
         }
     };
 
