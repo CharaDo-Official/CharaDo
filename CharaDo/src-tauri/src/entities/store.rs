@@ -8,8 +8,12 @@ pub struct StoreAddOn {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
+pub struct StoreAddOns {
+    pub add_ons: Vec<StoreAddOn>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct StoreAppInfo {
     pub id: String,
     pub title: String,
-    pub add_ons: Vec<StoreAddOn>,
 }
