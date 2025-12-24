@@ -1,3 +1,5 @@
+// エンティティを管理するモジュール
+
 pub mod character;
 pub mod store;
 pub mod task;
