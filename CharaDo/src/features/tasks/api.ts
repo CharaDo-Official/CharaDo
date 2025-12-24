@@ -3,7 +3,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import type { TaskRaw, Importance, Status, Task } from "./types";
 
-// 生データ -> 整形データ
+// Rustデータ -> TSデータ
 function normalize(data: TaskRaw): Task {
 	return {
 		id: Number(data.id),
@@ -26,7 +26,7 @@ function toDateString(date: Date): string {
 	return `${year}-${month}-${day}`;
 }
 
-// 整形データ -> 生データ(Rust)
+// TSデータ -> Rustデータ
 function denormalize(data: Task): TaskRaw {
 	return {
 		id: Number(data.id),
@@ -57,17 +57,21 @@ export async function getAllTasks(): Promise<Task[]> {
  * @param id タスクID
  * @returns タスク
  */
-export async function getTask(id: number): Promise<Task> {
-	const rawTask: TaskRaw = await invoke("get_task", { id });
+export async function getTask(id: number): Promise<Task | null> {
+	const rawTask: TaskRaw | null = await invoke("get_task", { id });
+	if (rawTask === null) {
+		return null;
+	}
 	return normalize(rawTask);
 }
 	
 /**
  * タスクを追加
  * @param task タスク
+ * @returns 追加されたタスクID
  */
-export async function addTask(task: Task): Promise<void> {
-	await invoke("add_task", { task: denormalize(task) });
+export async function addTask(task: Task): Promise<number> {
+	return await invoke("add_task", { task: denormalize(task) });
 }
 
 /**

@@ -8,8 +8,8 @@ interface TaskState {
 	loading: boolean;
 	// Actions
 	fetchTasks: () => Promise<void>;
-	getTask: (id: number) => Promise<Task>;
-	addTask: (task: Task) => Promise<void>;
+	getTask: (id: number) => Promise<Task | null>;
+	addTask: (task: Task) => Promise<number>;
 	updateTask: (task: Task) => Promise<void>;
 	deleteTask: (id: number) => Promise<void>;
 }
@@ -48,8 +48,9 @@ export const useTaskStore = create<TaskState>((set, get) => ({
 	addTask: async (task: Task) => {
 		set({ loading: true });
 		try {
-			await api.addTask(task);
+			const id = await api.addTask(task);
 			await get().fetchTasks();
+			return id;
 		} finally {
 			set({ loading: false });
 		}
