@@ -1,5 +1,7 @@
 use crate::repository::store::fetch_store_info;
 use crate::entities::store::StoreAppInfo;
+use crate::repository::store::fetch_store_addons;
+use crate::entities::store::StoreAddOns;
 
 #[tauri::command]
 pub async fn get_store_info() -> Result<StoreAppInfo, String> {
