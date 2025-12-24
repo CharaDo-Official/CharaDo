@@ -1,29 +1,53 @@
+use serde::Serialize;
 use std::io;
 use std::sync::PoisonError;
 use std::sync::RwLockReadGuard;
 use std::sync::RwLockWriteGuard;
 use thiserror::Error;
+use ts_rs::TS;
 
-#[derive(Debug, Error)]
+#[derive(Debug, Error, Serialize, TS)]
+#[serde(tag = "type", content = "message")] // タグ付きユニオンにする
+#[ts(export, export_to = "user_error.ts")] // TS出力設定
 pub enum UserError {
-	/// JSONパースエラー
+  /// JSONパースエラー
   #[error("JSON parse error: {0}")]
-  ParseError(serde_json::Error),
-	/// バリデーションエラー
+  ParseError(
+    #[serde(serialize_with = "serialize_error_message")]
+    #[ts(type = "string")]
+    serde_json::Error,
+  ),
+  /// バリデーションエラー
   #[error("Validation error: {0}")]
   ValidationError(String),
-	/// ファイル操作エラー
+  /// ファイル操作エラー
   #[error("I/O error: {0}")]
-  IoError(io::Error),
-	/// データが見つからないエラー
-  #[error("Data not found: {0}")]
+  IoError(
+    #[serde(serialize_with = "serialize_error_message")]
+    #[ts(type = "string")]
+    io::Error,
+  ),
+  /// データが見つからないエラー
+  #[error("Not found error: {0}")]
   NotFoundError(String),
-	/// RwLockのPoisonエラー
+  /// RwLockのPoisonエラー
   #[error("PoisonError: {0}")]
-  PoisonError(io::Error),
-	/// ストアエラー
+  PoisonError(
+    #[serde(serialize_with = "serialize_error_message")]
+    #[ts(type = "string")]
+    io::Error,
+  ),
+  /// ストアエラー
   #[error("Store error: {0}")]
   StoreError(String),
+}
+
+fn serialize_error_message<T, S>(_value: &T, serializer: S) -> Result<S::Ok, S::Error>
+where
+  S: serde::Serializer,
+{
+  // 種類を問わず、詳細を隠して汎用メッセージを返す
+  serializer.serialize_str("Internal System Error")
 }
 
 // エラー体系に参加させるために std::error::Error を実装 [derive(Error)] で自動実装
@@ -60,15 +84,5 @@ impl<T> From<PoisonError<RwLockWriteGuard<'_, T>>> for UserError {
       io::ErrorKind::Other,
       format!("lock poisoned: {:?}", err),
     ))
-  }
-}
-
-// UserErrorをシリアライズ可能にする実装(invokeで返すため)
-impl serde::Serialize for UserError {
-  fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
-  where
-    S: serde::ser::Serializer,
-  {
-    serializer.serialize_str(self.to_string().as_ref())
   }
 }
