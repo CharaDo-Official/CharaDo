@@ -39,6 +39,14 @@ export default function CharacterView() {
 			// 更新
 			// ※ 実際にはバリデーションやデータ変換が必要
 			const updatedCharacter = { ...editingCharacter, ...data } as Character;
+			
+			// サムネイルを通常時の画像で代用（サムネイルが未設定の場合）
+			if (!updatedCharacter.thumbnail_source || (updatedCharacter.thumbnail_source as any).External === "") {
+				if (updatedCharacter.necessary_media.usual) {
+					updatedCharacter.thumbnail_source = updatedCharacter.necessary_media.usual;
+				}
+			}
+
 			await updateCharacter(updatedCharacter);
 		} else {
 			// 新規作成
@@ -49,12 +57,17 @@ export default function CharacterView() {
 				id: 0, // Rust側で無視されるか、自動採番される想定
 				is_standard: false,
 				dialogues: { usual: null, addition: null, achievement: null, on_stage: null, off_stage: null, touch: null },
-				necessary_media: { usual: { Embedded: "" }, addition: { Embedded: "" }, achievement: { Embedded: "" }, on_stage: { Embedded: "" } },
+				necessary_media: { usual: { External: "" }, addition: { External: "" }, achievement: { External: "" }, on_stage: { External: "" } },
 				optional_media: { off_stage: null, touch: null },
-				thumbnail_source: { Embedded: "" },
+				thumbnail_source: { External: "" },
 				author: "",
 				...data 
 			} as Character;
+			
+			// サムネイルを通常時の画像で代用
+			if (newCharacter.necessary_media.usual) {
+				newCharacter.thumbnail_source = newCharacter.necessary_media.usual;
+			}
 			
 			await addCharacter(newCharacter);
 		}

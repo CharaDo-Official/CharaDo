@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { Character } from "@features/characters/types";
+import { Character, MediaSource } from "@features/characters/types";
+import { useFileSelect } from "@features/characters/hooks";
 
 interface CharacterEditModalProps {
 	isOpen: boolean;
@@ -14,11 +15,22 @@ const INITIAL_CHARACTER: Partial<Character> = {
 	description: "",
 	is_standard: false,
 	// 他のフィールドは必要に応じて初期化
+	necessary_media: {
+		usual: { External: "" },
+		addition: { External: "" },
+		achievement: { External: "" },
+		on_stage: { External: "" },
+	},
+	optional_media: {
+		off_stage: null,
+		touch: null,
+	},
 };
 
 export default function CharacterEditModal({ isOpen, onClose, onSave, initialData }: CharacterEditModalProps) {
 	const [formData, setFormData] = useState<Partial<Character>>(INITIAL_CHARACTER);
 	const [touched, setTouched] = useState(false);
+	const { selectMediaFile } = useFileSelect();
 
 	// モーダルが開くたびに初期化
 	useEffect(() => {
@@ -41,8 +53,77 @@ export default function CharacterEditModal({ isOpen, onClose, onSave, initialDat
 		}
 	};
 
-	// 簡易的なバリデーション: 名前と必須アニメーション（ここでは仮に名前のみチェック）
-	const isValid = !!formData.name;
+	// 選択済みかどうかを判定するヘルパー（簡易）
+	const isMediaSelected = (category: "necessary" | "optional", key: string): boolean => {
+		if (category === "necessary") {
+			const media = formData.necessary_media as any;
+			return media && media[key] && (media[key].External || media[key].Embedded);
+		} else {
+			const media = formData.optional_media as any;
+			return media && media[key] && (media[key].External || media[key].Embedded);
+		}
+	};
+
+	// 簡易的なバリデーション: 名前と必須アニメーション
+	const isValid = !!formData.name &&
+		isMediaSelected("necessary", "usual") &&
+		isMediaSelected("necessary", "addition") &&
+		isMediaSelected("necessary", "achievement") &&
+		isMediaSelected("necessary", "on_stage");
+
+	// メディアファイルの更新ヘルパー
+	const updateMedia = async (
+		category: "necessary" | "optional",
+		key: string
+	) => {
+		const filePath = await selectMediaFile();
+		if (!filePath) return;
+
+		setFormData(prev => {
+			const mediaSource: MediaSource = { External: filePath }; // ファイルパスはExternalとして扱う
+
+			if (category === "necessary") {
+				return {
+					...prev,
+					necessary_media: {
+						...prev.necessary_media,
+						[key]: mediaSource
+					} as any // 型定義が複雑なため一時的にanyキャスト（実際には厳密にやるべき）
+				};
+			} else {
+				return {
+					...prev,
+					optional_media: {
+						...prev.optional_media,
+						[key]: mediaSource
+					} as any
+				};
+			}
+		});
+	};
+	
+	const getMediaLabel = (category: "necessary" | "optional", key: string): string => {
+		if (category === "necessary") {
+			const media = formData.necessary_media as any;
+			if (media && media[key]) {
+				// オブジェクトの中身を表示用文字列にする簡易処理
+				const src = media[key];
+				if (src.External) return src.External;
+				if (src.Embedded) return "Embedded Media";
+				return "未選択";
+			}
+		} else {
+			const media = formData.optional_media as any;
+			if (media && media[key]) {
+				const src = media[key];
+				if (src.External) return src.External;
+				if (src.Embedded) return "Embedded Media";
+				return "未選択";
+			}
+		}
+		return "未選択";
+	};
+
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
@@ -120,18 +201,29 @@ export default function CharacterEditModal({ isOpen, onClose, onSave, initialDat
 						</label>
 
 						<div className="grid gap-2">
-							{["通常時", "追加時", "達成時", "登場時"].map((label) => (
+							{[
+								{ label: "通常時", key: "usual" },
+								{ label: "追加時", key: "addition" },
+								{ label: "達成時", key: "achievement" },
+								{ label: "登場時", key: "on_stage" }
+							].map((item) => (
 								<button
-									key={label}
-									className="flex items-center gap-3 p-3 border border-orange-200 bg-orange-50/50 rounded-lg hover:bg-orange-100 transition-colors text-left group"
-									onClick={() => alert(`${label}のファイル選択機能は未実装です`)}
+									key={item.key}
+									className={`flex items-center gap-3 p-3 border rounded-lg transition-colors text-left group
+										${isMediaSelected("necessary", item.key) ? "bg-orange-100 border-orange-300" : "bg-orange-50/50 border-orange-200 hover:bg-orange-100"}`}
+									onClick={() => updateMedia("necessary", item.key)}
 								>
 									<div className="w-8 h-8 flex items-center justify-center bg-white rounded border border-orange-200 text-orange-400 group-hover:scale-110 transition-transform">
-										📄
+										{isMediaSelected("necessary", item.key) ? "✅" : "📄"}
 									</div>
-									<span className="text-sm text-gray-600 font-medium">
-										クリックで画像/動画ファイル({label})を選択
-									</span>
+									<div className="flex flex-col overflow-hidden w-full">
+										<span className="text-sm text-gray-600 font-medium">
+											{item.label}を選択
+										</span>
+										<span className="text-xs text-gray-400 truncate block w-full">
+											{getMediaLabel("necessary", item.key)}
+										</span>
+									</div>
 								</button>
 							))}
 						</div>
@@ -140,18 +232,27 @@ export default function CharacterEditModal({ isOpen, onClose, onSave, initialDat
 							アニメーション(拡張)
 						</label>
 						<div className="grid gap-2">
-							{["退場時", "タッチ時"].map((label) => (
+							{[
+								{ label: "退場時", key: "off_stage" },
+								{ label: "タッチ時", key: "touch" }
+							].map((item) => (
 								<button
-									key={label}
-									className="flex items-center gap-3 p-3 border border-gray-200 bg-white rounded-lg hover:bg-gray-50 transition-colors text-left group"
-									onClick={() => alert(`${label}のファイル選択機能は未実装です`)}
+									key={item.key}
+									className={`flex items-center gap-3 p-3 border rounded-lg transition-colors text-left group
+										${isMediaSelected("optional", item.key) ? "bg-gray-100 border-gray-300" : "bg-white border-gray-200 hover:bg-gray-50"}`}
+									onClick={() => updateMedia("optional", item.key)}
 								>
 									<div className="w-8 h-8 flex items-center justify-center bg-gray-50 rounded border border-gray-200 text-gray-400 group-hover:scale-110 transition-transform">
-										📄
+										{isMediaSelected("optional", item.key) ? "✅" : "📄"}
 									</div>
-									<span className="text-sm text-gray-500">
-										クリックで画像/動画ファイル({label})を選択
-									</span>
+									<div className="flex flex-col overflow-hidden w-full">
+										<span className="text-sm text-gray-500">
+											{item.label}を選択
+										</span>
+										<span className="text-xs text-gray-400 truncate block w-full">
+											{getMediaLabel("optional", item.key)}
+										</span>
+									</div>
 								</button>
 							))}
 						</div>
@@ -172,4 +273,3 @@ export default function CharacterEditModal({ isOpen, onClose, onSave, initialDat
 		</div>
 	);
 }
-

@@ -69,10 +69,17 @@ pub fn get_store_info_dev() -> Result<StoreAppInfo, UserError> {
   Ok(StoreAppInfo {
     id: "1234567890".to_string(),
     title: "Test App".to_string(),
-    add_ons: vec![StoreAddOn {
+    add_ons: vec![
+		StoreAddOn {
       id: obfstr!(env!("ADDON_ID_MOTION_EXPANSION")).to_string(),
       title: "ADDON_ID_MOTION_EXPANSION".to_string(),
       is_owned: true,
-    }],
+    },
+		StoreAddOn {
+      id: obfstr!(env!("ADDON_ID_CUSTOM_FRAME_1")).to_string(),
+      title: "ADDON_ID_CUSTOM_FRAME_1".to_string(),
+      is_owned: true,
+    },
+		],
   })
 }
