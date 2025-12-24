@@ -90,15 +90,18 @@ impl Character {
     self.dialogues = dialogue;
   }
 
-  /// モーションを取得
-  pub fn get_medias(&self) -> (NecessaryMedia, OptionalMedia) {
-    (self.necessary_media.clone(), self.optional_media.clone())
-  }
+	/// 権限フリー情報の取得
+	pub fn get_permission_free_param(&self) -> (String, String, NecessaryMedia, OptionalMedia, MediaSource) {
+		(self.name.clone(), self.description.clone(), self.necessary_media.clone(), self.optional_media.clone(), self.thumbnail_source.clone())
+	}
 
-  /// モーションを設定
-  pub fn set_medias(&mut self, medias: (NecessaryMedia, OptionalMedia)) {
-    self.necessary_media = medias.0;
-    self.optional_media = medias.1;
+  /// 権限フリー情報の設定
+  pub fn set_permission_free_param(&mut self, permission_free_param: (String, String, NecessaryMedia, OptionalMedia, MediaSource)) {
+    self.name = permission_free_param.0;
+    self.description = permission_free_param.1;
+    self.necessary_media = permission_free_param.2;
+    self.optional_media = permission_free_param.3;
+    self.thumbnail_source = permission_free_param.4;
   }
 }
 

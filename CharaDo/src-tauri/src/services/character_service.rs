@@ -162,14 +162,24 @@ pub fn update_character(state: State<AppState>, character: Character) -> Result<
 
     // データ加工
     // モーション拡張パックを購入していた場合、セリフを変更可能
-    if is_motion_expansion_owned {
-      target_character.set_dialogue(character.get_dialogue());
-      // かつ、ユーザ作成キャラクターの場合、モーションも変更可能
-      if !is_standard {
-        target_character.set_medias(character.get_medias());
-      }
-    }
-
+		if is_standard {	
+			if is_motion_expansion_owned {
+				// 標準キャラクター かつ モーション拡張パックを購入していた場合、セリフを変更可能
+				target_character.set_dialogue(character.get_dialogue());
+			} else {
+				// 標準キャラクター かつ モーション拡張パックを購入していない場合、変更不可
+				return Err(UserError::StoreError("標準キャラクターかつアドオン未所持により更新不可能です".to_string()));
+			}
+		} else {
+			if is_motion_expansion_owned {
+				// ユーザ作成キャラクター かつ モーション拡張パックを購入していた場合、全て変更可能
+				target_character = character;
+			} else {
+				// ユーザ作成キャラクター かつ モーション拡張パックを購入していない場合、(セリフ・タッチモーション)以外を変更可能
+				target_character.set_permission_free_param(character.get_permission_free_param());
+			}
+		}
+		
     // キャラクター更新
     repo.update(target_character)?;
     Ok(())
