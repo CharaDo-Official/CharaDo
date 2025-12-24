@@ -37,6 +37,32 @@ const DebugView: React.FC = () => {
 		}
 	}
 
+	async function getStoreAddons() {
+		setLoading(true);
+		try {
+			// 型を any にして生のレスポンスを受け取る
+			// eslint-disable-next-line @typescript-eslint/no-explicit-any
+			const data = await invoke<any>("get_store_addons");
+			setAppInfo(data);
+			await info("DebugView: store addons fetched");
+			console.log("Store AddOns:", data);
+		} catch (error) {
+			// 詳細を全部出力する（DevTools と端末）
+			console.error("Error fetching store addons (raw):", error);
+			console.dir(error);
+			try {
+				// Error オブジェクトの非列挙プロパティも含めて文字列化
+				const snap = JSON.stringify(error, Object.getOwnPropertyNames(error));
+				console.log("Error JSON snapshot:", snap);
+			} catch (e) {
+				console.warn("stringify error failed:", e);
+			}
+			await info(`get_store_addons error: ${String(error)}`);
+		} finally {
+			setLoading(false);
+		}
+	}
+
 	return (
 		<div>
 			<h2>Debug View</h2>
@@ -46,6 +72,9 @@ const DebugView: React.FC = () => {
 				</button>
 				<button onClick={getStoreInfo} disabled={loading}>
 					{loading ? "Loading..." : "Get Store App Info"}
+				</button>
+				<button onClick={getStoreAddons} disabled={loading}>
+					{loading ? "Loading..." : "Get Store AddOns"}
 				</button>
 			</div>
 			
