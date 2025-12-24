@@ -1,4 +1,3 @@
-// ...existing code...
 use futures::executor::block_on;
 use std::future::IntoFuture;
 use windows::{core::HSTRING, Services::Store::StoreContext};
@@ -7,6 +6,7 @@ use windows_collections::IIterable;
 
 use crate::entities::store::{StoreAppInfo, StoreAddOn};
 
+//アドオン情報、ストア情報前権取得
 pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, String> {
     unsafe { let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED); }
     struct ComGuard;
