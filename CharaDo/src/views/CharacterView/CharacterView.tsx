@@ -1,11 +1,19 @@
 import { useState, useEffect } from "react";
-import { useCharacters } from "@features/characters/hooks";
+import { useCharacters, useCharacterActions } from "@features/characters/hooks";
+import { Character } from "@features/characters/types";
 import CharacterList from "./components/CharacterList";
 import CharacterDetail from "./components/CharacterDetail";
+import CharacterEditModal from "./components/CharacterEditModal";
 
 export default function CharacterView() {
 	const { characters, loading } = useCharacters();
+	const { addCharacter, updateCharacter } = useCharacterActions();
+	
 	const [selectedCharacterId, setSelectedCharacterId] = useState<number | null>(null);
+	
+	// モーダル管理
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [editingCharacter, setEditingCharacter] = useState<Character | null>(null);
 
 	// 初期選択（データロード完了時に最初のキャラクターを選択）
 	useEffect(() => {
@@ -15,6 +23,42 @@ export default function CharacterView() {
 	}, [loading, characters, selectedCharacterId]);
 
 	const selectedCharacter = characters.find(c => c.id === selectedCharacterId) || null;
+
+	const handleAddClick = () => {
+		setEditingCharacter(null); // 新規作成
+		setIsModalOpen(true);
+	};
+
+	const handleEditClick = (character: Character) => {
+		setEditingCharacter(character); // 編集
+		setIsModalOpen(true);
+	};
+
+	const handleSave = async (data: Partial<Character>) => {
+		if (editingCharacter) {
+			// 更新
+			// ※ 実際にはバリデーションやデータ変換が必要
+			const updatedCharacter = { ...editingCharacter, ...data } as Character;
+			await updateCharacter(updatedCharacter);
+		} else {
+			// 新規作成
+			// 仮のIDや初期データを補完する必要があるが、ここではモック的に処理
+			// 本来はRust側でID生成などを任せるため、dataをそのまま渡す形になるはず
+			// 今回は型エラー回避のため、とりあえずキャスト
+			const newCharacter = { 
+				id: 0, // Rust側で無視されるか、自動採番される想定
+				is_standard: false,
+				dialogues: { usual: null, addition: null, achievement: null, on_stage: null, off_stage: null, touch: null },
+				necessary_media: { usual: { Embedded: "" }, addition: { Embedded: "" }, achievement: { Embedded: "" }, on_stage: { Embedded: "" } },
+				optional_media: { off_stage: null, touch: null },
+				thumbnail_source: { Embedded: "" },
+				author: "",
+				...data 
+			} as Character;
+			
+			await addCharacter(newCharacter);
+		}
+	};
 
 	return (
 		<div className="flex h-[calc(100vh-64px)] p-4 gap-4 overflow-hidden bg-orange-50/30">
@@ -27,6 +71,8 @@ export default function CharacterView() {
 					characters={characters}
 					selectedId={selectedCharacterId}
 					onSelect={setSelectedCharacterId}
+					onAdd={handleAddClick}
+					onEdit={handleEditClick}
 				/>
 			</section>
 
@@ -46,7 +92,14 @@ export default function CharacterView() {
 					</div>
 				)}
 			</section>
+
+			{/* id50 キャラ詳細モーダル */}
+			<CharacterEditModal 
+				isOpen={isModalOpen}
+				onClose={() => setIsModalOpen(false)}
+				onSave={handleSave}
+				initialData={editingCharacter}
+			/>
 		</div>
 	);
 }
-
