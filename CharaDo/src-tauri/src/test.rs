@@ -12,3 +12,16 @@ pub fn test() {
 
   info!("VIDEO_DATA length: {}", VIDEO_DATA.len());
 }
+
+
+#[cfg(test)]
+mod tests {
+	use crate::datas::preset_setting::get_default_setting;
+
+  #[test]
+  fn get_user_language_works() {
+
+    println!("default setting: {:?}", get_default_setting());
+
+  }
+}
