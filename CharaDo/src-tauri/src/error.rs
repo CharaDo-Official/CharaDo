@@ -40,6 +40,9 @@ pub enum UserError {
   /// ストアエラー
   #[error("Store error: {0}")]
   StoreError(String),
+  /// WinRT API関連のエラー
+  #[error("Windows API error: {0}")]
+  WinApiError(String),
 }
 
 fn serialize_error_message<T, S>(_value: &T, serializer: S) -> Result<S::Ok, S::Error>
