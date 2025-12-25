@@ -148,15 +148,25 @@ use obfstr::obfstr;
 // 開発用
 pub fn get_store_info_dev() -> Result<Vec<StoreAddOn>, UserError> {
   Ok(vec![
-		StoreAddOn {
-      id: obfstr!(env!("ADDON_ID_MOTION_EXPANSION")).to_string(),
-      title: "ADDON_ID_MOTION_EXPANSION".to_string(),
-      is_owned: true,
-    },
-		StoreAddOn {
-      id: obfstr!(env!("ADDON_ID_CUSTOM_FRAME_1")).to_string(),
-      title: "ADDON_ID_CUSTOM_FRAME_1".to_string(),
-      is_owned: true,
-    },
+        StoreAddOn {
+            id: obfstr!(env!("ADDON_ID_MOTION_EXPANSION")).to_string(),
+            title: "ADDON_ID_MOTION_EXPANSION".to_string(),
+            is_owned: true,
+        },
+        StoreAddOn {
+            id: obfstr!(env!("ADDON_ID_CUSTOM_FRAME_1")).to_string(),
+            title: "ADDON_ID_CUSTOM_FRAME_1".to_string(),
+            is_owned: true,
+        },
+        StoreAddOn {
+            id: obfstr!(env!("ADDON_ID_CUSTOM_FRAME_2")).to_string(),
+            title: "ADDON_ID_CUSTOM_FRAME_2".to_string(),
+            is_owned: true,
+        },
+        StoreAddOn {
+            id: obfstr!(env!("ADDON_ID_CUSTOM_FRAME_4")).to_string(),
+            title: "ADDON_ID_CUSTOM_FRAME_4".to_string(),
+            is_owned: true,
+        },
 	])
 }
