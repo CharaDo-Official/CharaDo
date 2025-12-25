@@ -3,79 +3,49 @@ use crate::entities::user::*;
 use crate::error::UserError;
 use crate::state::AppState;
 use tauri::State;
+use crate::repository::json_repository::JsonRepository;
+
+/// ヘルパー: ユーザー設定を取得し、存在しない場合はデフォルト設定で初期化する
+fn get_or_initialize_user(repo: &mut JsonRepository<User>,) -> Result<User, UserError> {
+  if let Some(user) = repo.get(0) {
+    return Ok(user.clone());
+  } else {
+		let default_user_setting = get_default_setting();
+		repo.replace(vec![default_user_setting.clone()])?;
+		Ok(default_user_setting)
+	}
+}
 
 /**
  * ユーザー設定を取得
  */
 pub fn get_user_config(state: State<AppState>) -> Result<User, UserError> {
-  {
-    // 情報整合性確保
-    let mut repo = state.user_repo.write()?;
-
-    // ユーザ設定取得
-    let user = match repo.get(0) {
-      Some(user) => user.clone(),
-      None => {
-        // ユーザ設定が存在しない場合、破損と見なしデフォルト設定保存
-        let default_user_setting = get_default_setting();
-        // デフォルト設定保存
-        repo.replace(vec![default_user_setting.clone()])?;
-        default_user_setting
-      }
-    };
-
-    Ok(user)
-  }
+  let mut repo = state.user_repo.write()?;
+  get_or_initialize_user(&mut repo)
 }
 
 /**
  * 使用中キャラクターIDを設定
  */
 pub fn set_using_character_id(state: State<AppState>, character_id: u32) -> Result<(), UserError> {
-  {
-    // 情報整合性確保
-    let mut repo = state.user_repo.write()?;
+  let mut repo = state.user_repo.write()?;
+  let mut user = get_or_initialize_user(&mut repo)?;
 
-    match repo.get(0) {
-      Some(user) => {
-        let mut user = user.clone();
-        user.set_current_character_id(character_id);
-        repo.update(user)?;
-      }
-      None => {
-        // ユーザ設定が存在しない場合、破損と見なしデフォルト設定にキャラクターID追加
-        let mut default_user_setting = get_default_setting();
-        default_user_setting.set_current_character_id(character_id);
-        // デフォルト設定保存
-        repo.replace(vec![default_user_setting])?;
-      }
-    }
+  user.set_current_character_id(character_id);
+  repo.update(user)?;
 
-    Ok(())
-  }
+  Ok(())
 }
 
 /**
  * 言語を設定
  */
 pub fn set_user_language(state: State<AppState>, language: Language) -> Result<(), UserError> {
-  // 情報整合性確保
   let mut repo = state.user_repo.write()?;
+  let mut user = get_or_initialize_user(&mut repo)?;
 
-  match repo.get(0) {
-    Some(user) => {
-      let mut user = user.clone();
-      user.set_language(language);
-      repo.update(user)?;
-    }
-    None => {
-      // ユーザ設定が存在しない場合、破損と見なしデフォルト設定に言語追加
-      let mut default_user_setting = get_default_setting();
-      default_user_setting.set_language(language);
-      // デフォルト設定保存
-      repo.replace(vec![default_user_setting])?;
-    }
-  }
+  user.set_language(language);
+  repo.update(user)?;
 
   Ok(())
 }
