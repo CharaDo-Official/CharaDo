@@ -57,6 +57,7 @@ pub fn run() {
       user::set_using_character_id,
       store::get_store_info,
 			store::get_owned_addons,
+			store::get_store_addons,
     ])
     .setup(|_app| {
       lib_main();

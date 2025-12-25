@@ -22,7 +22,6 @@ pub async fn get_store_addons() -> Result<Vec<StoreAddOn>, UserError> {
         .map_err(|e| UserError::ValidationError(format!("spawn_blocking error: {:?}", e)))?
 }
 
-
 /**
  * 所持しているアドオンを取得
  * アドオンの種類を返却(AddonType)

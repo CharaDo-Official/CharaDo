@@ -8,6 +8,9 @@ use crate::error::UserError;
 use crate::entities::store::{StoreAppInfo, StoreAddOn};
 use log::{warn};
 
+/**
+ * アプリ情報を取得
+ */
 pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, UserError> {
     // WindowsRT API対応：COM STA初期化と自動解放（ComGuard）
     unsafe { let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED);}
@@ -68,6 +71,9 @@ pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, UserError> {
     Ok(StoreAppInfo { id, title })
 }
 
+/**
+ * アドオン情報を取得
+ */
 pub(crate) fn fetch_store_addons() -> Result<Vec<StoreAddOn>, UserError> {
     // WindowsRT API対応：COM STA初期化と自動解放（ComGuard）
     unsafe { let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED);}

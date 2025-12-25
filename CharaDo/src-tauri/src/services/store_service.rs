@@ -12,7 +12,8 @@ pub fn is_addon_owned(target_addon_type: AddonType) -> Result<bool, UserError> {
   for addon in addons {
     match AddonType::from_id(&addon.id) {
       Some(addon_type) => {
-        if addon_type == target_addon_type {
+				// アドオン種類が一致し、所持されている場合はtrue
+        if addon_type == target_addon_type && addon.is_owned {
           return Ok(true);
         }
       }
