@@ -19,6 +19,7 @@ export const ERROR_TYPE = {
 	Poison: "PoisonError",
 	Io: "IoError",
 	Parse: "ParseError",
+	WinApi: "WinApiError",
 } as const satisfies Record<string, UserErrorType>;
 
 // アプリケーション内で扱う統一エラー型
