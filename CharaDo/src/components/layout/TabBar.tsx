@@ -1,5 +1,5 @@
 // src/components/layout/TabBar.tsx
-import { TABS, TabKey } from "../../config/tabs";
+import { TABS, TabKey } from "@config/tabs";
 
 type Props = {
 	active: TabKey;
@@ -11,11 +11,11 @@ const TabBar = ({ active, onChange }: Props) => {
 		<div className="flex">
 			{TABS.map((tab) => (
 				<button
-					key={tab}
-					className={`py-2 px-4 rounded ${active === tab ? "bg-blue-500 text-white" : "bg-gray-200"}`}
-					onClick={() => onChange(tab)}
+					key={tab.key}
+					className={`py-2 px-4 rounded ${active === tab.key ? "bg-blue-500 text-white" : "bg-gray-200"}`}
+					onClick={() => onChange(tab.key)}
 				>
-					{tab}
+					{tab.label}
 				</button>
 			))}
 		</div>

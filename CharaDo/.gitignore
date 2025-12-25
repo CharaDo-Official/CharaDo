@@ -24,6 +24,11 @@ target/
 *.sln
 *.sw?
 
+# env
+.env
+
+# assets
+src-tauri/assets
 
 # coverage
 coverage

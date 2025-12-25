@@ -1,78 +1,45 @@
-use tauri::State;
-use crate::state::AppState;
 use crate::entities::task::Task;
 use crate::error::UserError;
+use crate::services::task_service;
+use crate::state::AppState;
+use tauri::State;
 
+/**
+ * 全てのタスクを取得
+ */
 #[tauri::command]
 pub fn get_all_tasks(state: State<AppState>) -> Result<Vec<Task>, UserError> {
-
-  match state.task_repo.read() {
-		Ok(repo) => return Ok(repo.get_all().clone()),
-		Err(e) => return Err(e.into()),
-	}
+  task_service::get_all_tasks(state)
 }
 
+/**
+ * タスクを取得
+ */
 #[tauri::command]
-pub fn get_task(state: State<AppState>, id: u32) -> Option<Task> {
-
-	match state.task_repo.read() {
-		Ok(repo) => repo.get(id).cloned(),
-		Err(_) => return None,
-	}
+pub fn get_task(state: State<AppState>, id: u32) -> Result<Option<Task>, UserError> {
+  task_service::get_task(state, id)
 }
 
+/**
+ * タスクを追加
+ */
 #[tauri::command]
 pub fn add_task(state: State<AppState>, task: Task) -> Result<u32, UserError> {
-
-	match state.task_repo.write() {
-		Ok(mut repo) => {
-			if task.is_title_empty() {
-				return Err(UserError::ValidationError("Title is empty".to_string()));
-			}
-			let id = repo.add(task)?;
-			Ok(id)
-		}
-		Err(e) => Err(e.into()),
-	}
+  task_service::add_task(state, task)
 }
 
+/**
+ * タスクを削除
+ */
 #[tauri::command]
 pub fn delete_task(state: State<AppState>, id: u32) -> Result<(), UserError> {
-
-	match state.task_repo.write() {
-		Ok(mut repo) => repo.remove(id),
-		Err(e) => Err(e.into()),
-	}
+  task_service::delete_task(state, id)
 }
 
+/**
+ * タスクを更新
+ */
 #[tauri::command]
 pub fn update_task(state: State<AppState>, task: Task) -> Result<(), UserError> {
-
-	match state.task_repo.write() {
-		Ok(mut repo) => repo.update(task),
-		Err(e) => Err(e.into()),
-	}
+  task_service::update_task(state, task)
 }
-
-#[tauri::command]
-pub fn update_tasks(state: State<AppState>, tasks: Vec<Task>) -> Result<(), UserError> {
-
-	match state.task_repo.write() {
-		Ok(mut repo) => {
-			for task in tasks {
-				repo.update(task)?;
-			}
-			Ok(())
-		},
-		Err(e) => Err(e.into()),
-	}
-}
-
-
-
-
-
-
-
-
-

@@ -1,7 +1,7 @@
 use futures::executor::block_on;
 use std::future::IntoFuture;
-use windows::{core::HSTRING, Services::Store::StoreContext};
 use windows::Win32::System::Com::{CoInitializeEx, CoUninitialize, COINIT_APARTMENTTHREADED};
+use windows::{core::HSTRING, Services::Store::StoreContext};
 use windows_collections::IIterable;
 
 use crate::error::UserError;
@@ -118,6 +118,7 @@ pub(crate) fn fetch_store_addons() -> Result<StoreAddOns, UserError> {
             if let Some(addon) = extract_addon_info(pair) {
                 add_ons.push(addon);
             }
+          }
         }
         it.MoveNext().ok();
     }
@@ -136,4 +137,26 @@ fn extract_addon_info(pair: windows_collections::IKeyValuePair<HSTRING, windows:
         title,
         is_owned: true,
     })
+}
+
+use crate::error::UserError;
+use obfstr::obfstr;
+// 開発用
+pub fn get_store_info_dev() -> Result<StoreAppInfo, UserError> {
+  Ok(StoreAppInfo {
+    id: "1234567890".to_string(),
+    title: "Test App".to_string(),
+    add_ons: vec![
+		StoreAddOn {
+      id: obfstr!(env!("ADDON_ID_MOTION_EXPANSION")).to_string(),
+      title: "ADDON_ID_MOTION_EXPANSION".to_string(),
+      is_owned: true,
+    },
+		StoreAddOn {
+      id: obfstr!(env!("ADDON_ID_CUSTOM_FRAME_1")).to_string(),
+      title: "ADDON_ID_CUSTOM_FRAME_1".to_string(),
+      is_owned: true,
+    },
+		],
+  })
 }

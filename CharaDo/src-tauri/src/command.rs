@@ -1,4 +1,5 @@
-pub mod task;
+// フロントへのAPI実装を行うモジュール
 pub mod character;
-pub mod user;
 pub mod store;
+pub mod task;
+pub mod user;

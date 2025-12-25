@@ -1,8 +1,12 @@
+
 use crate::repository::store::fetch_store_info;
 use crate::entities::store::StoreAppInfo;
 use crate::repository::store::fetch_store_addons;
 use crate::entities::store::StoreAddOns;
 use crate::error::UserError;
+use crate::services::store_service;
+use crate::entities::store::AddonType;
+
 
 #[tauri::command]
 pub async fn get_store_info() -> Result<StoreAppInfo, UserError> {
@@ -16,4 +20,14 @@ pub async fn get_store_addons() -> Result<StoreAddOns, UserError> {
     tauri::async_runtime::spawn_blocking(|| fetch_store_addons())
         .await
         .map_err(|e| UserError::ValidationError(format!("spawn_blocking error: {:?}", e)))?
+}
+
+
+/**
+ * 所持しているアドオンを取得
+ * アドオンの種類を返却(AddonType)
+ */
+#[tauri::command]
+pub fn get_owned_addons() -> Result<Vec<AddonType>, UserError> {
+	store_service::get_owned_addons()
 }
