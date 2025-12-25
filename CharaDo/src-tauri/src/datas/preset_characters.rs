@@ -2,13 +2,16 @@
 use crate::entities::character::*;
 use url::Url;
 
+/**
+ * アプリ標準キャラクターのデータを取得
+ */
 pub fn get_preset_characters() -> Vec<Character> {
   vec![create_tumugi()]
 }
 
 fn create_tumugi() -> Character {
   Character::new(
-    1,
+    0,
     "紬(つむぎ)".to_string(),
     "あなたのタスク管理をサポートする、猫耳の少女。日々のタスクと人を、紡いでいってほしいという願いから「つむぎ」と名付けられた。".to_string(),
     NecessaryMedia::new(
