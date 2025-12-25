@@ -11,8 +11,8 @@ pub fn get_user_config(state: State<AppState>) -> Result<User, UserError> {
 }
 
 #[tauri::command]
-pub fn set_using_character_id(state: State<AppState>, character_id: u32) -> Result<(), UserError> {
-  user_service::set_using_character_id(state, character_id)
+pub fn set_using_character_id(state: State<AppState>, character_id: u32, is_standard: bool) -> Result<(), UserError> {
+  user_service::set_using_character_id(state, character_id, is_standard)
 }
 
 #[tauri::command]
