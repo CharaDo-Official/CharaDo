@@ -2,10 +2,10 @@
 use crate::repository::store::fetch_store_info;
 use crate::entities::store::StoreAppInfo;
 use crate::repository::store::fetch_store_addons;
-use crate::entities::store::StoreAddOns;
 use crate::error::UserError;
 use crate::services::store_service;
 use crate::entities::store::AddonType;
+use crate::entities::store::StoreAddOn;
 
 
 #[tauri::command]
@@ -16,7 +16,7 @@ pub async fn get_store_info() -> Result<StoreAppInfo, UserError> {
 }
 
 #[tauri::command]
-pub async fn get_store_addons() -> Result<StoreAddOns, UserError> {
+pub async fn get_store_addons() -> Result<Vec<StoreAddOn>, UserError> {
     tauri::async_runtime::spawn_blocking(|| fetch_store_addons())
         .await
         .map_err(|e| UserError::ValidationError(format!("spawn_blocking error: {:?}", e)))?

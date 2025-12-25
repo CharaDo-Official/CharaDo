@@ -5,7 +5,7 @@ use windows::{core::HSTRING, Services::Store::StoreContext};
 use windows_collections::IIterable;
 
 use crate::error::UserError;
-use crate::entities::store::{StoreAppInfo, StoreAddOn, StoreAddOns};
+use crate::entities::store::{StoreAppInfo, StoreAddOn};
 use log::{warn};
 
 pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, UserError> {
@@ -68,7 +68,7 @@ pub(crate) fn fetch_store_info() -> Result<StoreAppInfo, UserError> {
     Ok(StoreAppInfo { id, title })
 }
 
-pub(crate) fn fetch_store_addons() -> Result<StoreAddOns, UserError> {
+pub(crate) fn fetch_store_addons() -> Result<Vec<StoreAddOn>, UserError> {
     // WindowsRT API対応：COM STA初期化と自動解放（ComGuard）
     unsafe { let _ = CoInitializeEx(None, COINIT_APARTMENTTHREADED);}
     struct ComGuard;
@@ -106,10 +106,10 @@ pub(crate) fn fetch_store_addons() -> Result<StoreAddOns, UserError> {
 
     // アドオンのマップ(Products)とイテレータを取得
     let Ok(products) = addon_res.Products() else {
-        return Ok(StoreAddOns { add_ons }) 
+        return Ok( add_ons ) 
     };
     let Ok(it) = products.First() else {
-        return Ok(StoreAddOns { add_ons })
+        return Ok( add_ons )
     };
 
     // イテレータを使ってアドオン情報を収集
@@ -119,11 +119,10 @@ pub(crate) fn fetch_store_addons() -> Result<StoreAddOns, UserError> {
                 add_ons.push(addon);
             }
           }
-        }
         it.MoveNext().ok();
     }
 
-    Ok(StoreAddOns { add_ons })
+    Ok( add_ons )
 }
 
 // アドオン情報を抽出するヘルパー関数
@@ -139,14 +138,10 @@ fn extract_addon_info(pair: windows_collections::IKeyValuePair<HSTRING, windows:
     })
 }
 
-use crate::error::UserError;
 use obfstr::obfstr;
 // 開発用
-pub fn get_store_info_dev() -> Result<StoreAppInfo, UserError> {
-  Ok(StoreAppInfo {
-    id: "1234567890".to_string(),
-    title: "Test App".to_string(),
-    add_ons: vec![
+pub fn get_store_info_dev() -> Result<Vec<StoreAddOn>, UserError> {
+  Ok(vec![
 		StoreAddOn {
       id: obfstr!(env!("ADDON_ID_MOTION_EXPANSION")).to_string(),
       title: "ADDON_ID_MOTION_EXPANSION".to_string(),
@@ -157,6 +152,5 @@ pub fn get_store_info_dev() -> Result<StoreAppInfo, UserError> {
       title: "ADDON_ID_CUSTOM_FRAME_1".to_string(),
       is_owned: true,
     },
-		],
-  })
+	])
 }
