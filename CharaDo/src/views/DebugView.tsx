@@ -1,11 +1,15 @@
 import { invoke } from "@tauri-apps/api/core";
 import { info } from "@tauri-apps/plugin-log";
 import { useState } from "react";
+import { useUserSetting } from "@features/user-setting";
+
 
 const DebugView: React.FC = () => {
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const [appInfo, setAppInfo] = useState<any>(null);
 	const [loading, setLoading] = useState(false);
+
+	const { user } = useUserSetting();
 
 	async function testLog() {
 		await info("DebugView: test button clicked");
@@ -97,6 +101,23 @@ const DebugView: React.FC = () => {
 						overflowX: "auto"
 					}}>
 						{JSON.stringify(appInfo, null, 2)}
+					</pre>
+				</div>
+			)}
+
+			{user && (
+				<div style={{ textAlign: "left" }}>
+					<h3>User Config:</h3>
+					<pre style={{
+						marginTop: 12,
+						padding: 8,
+						border: "1px solid #ccc",
+						borderRadius: 6,
+						backgroundColor: "#f5f5f5",
+						color: "#333",
+						overflowX: "auto"
+					}}>
+						{JSON.stringify(user, null, 2)}
 					</pre>
 				</div>
 			)}
