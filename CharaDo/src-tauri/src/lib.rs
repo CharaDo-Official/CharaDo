@@ -12,11 +12,10 @@ mod state;
 use command::character;
 use command::task;
 use command::user;
+use command::store;
 use entities::task::Task;
 use repository::json_repository::JsonRepository;
 use state::AppState;
-
-use command::store;
 
 fn lib_main() {
   // 保存ディレクトリ
