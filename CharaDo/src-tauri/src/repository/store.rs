@@ -92,7 +92,10 @@ pub(crate) fn fetch_store_addons() -> Result<Vec<StoreAddOn>, UserError> {
 
     // アドオン情報取得操作の生成
     let mut add_ons: Vec<StoreAddOn> = Vec::new();
-    let kinds: IIterable<HSTRING> = IIterable::from(Vec::<HSTRING>::new());
+    let kinds: IIterable<HSTRING> = IIterable::from(vec![
+        HSTRING::from("Durable"),   // 永続的なアドオン
+        HSTRING::from("Consumable") // 消費型のアドオン
+    ]);
     let addon_op = match ctx.GetUserCollectionAsync(&kinds) {
         Ok(op) => op,
         Err(e) => {
