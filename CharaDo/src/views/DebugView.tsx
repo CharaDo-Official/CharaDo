@@ -3,103 +3,63 @@ import { info } from "@tauri-apps/plugin-log";
 import { useState } from "react";
 
 const DebugView: React.FC = () => {
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	const [appInfo, setAppInfo] = useState<any>(null);
-	const [loading, setLoading] = useState(false);
-
-	async function testLog() {
-		await info("DebugView: test button clicked");
-	}
+	const [addons, setAddons] = useState<any>(null); // アドオン専用のステート
+	const [loadingInfo, setLoadingInfo] = useState(false); // アプリ情報用
+	const [loadingAddons, setLoadingAddons] = useState(false); // アドオン用
 
 	async function getStoreInfo() {
-		setLoading(true);
+		setLoadingInfo(true);
 		try {
-			// 型を any にして生のレスポンスを受け取る
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const data = await invoke<any>("get_store_info");
 			setAppInfo(data);
 			await info("DebugView: store app info fetched");
-			console.log("App Info:", data);
 		} catch (error) {
-			// 詳細を全部出力する（DevTools と端末）
-			console.error("Error fetching app info (raw):", error);
-			console.dir(error);
-			try {
-				// Error オブジェクトの非列挙プロパティも含めて文字列化
-				const snap = JSON.stringify(error, Object.getOwnPropertyNames(error));
-				console.log("Error JSON snapshot:", snap);
-			} catch (e) {
-				console.warn("stringify error failed:", e);
-			}
-			await info(`get_store_info error: ${String(error)}`);
+			console.error("Error fetching app info:", error);
 		} finally {
-			setLoading(false);
+			setLoadingInfo(false);
 		}
 	}
 
 	async function getStoreAddons() {
-		setLoading(true);
+		setLoadingAddons(true);
 		try {
-			// 型を any にして生のレスポンスを受け取る
-			// eslint-disable-next-line @typescript-eslint/no-explicit-any
 			const data = await invoke<any>("get_store_addons");
-			setAppInfo(data);
+	        setAddons(data); // appInfo とは別の場所に保存
 			await info("DebugView: store addons fetched");
-			console.log("Store AddOns:", data);
 		} catch (error) {
-			// 詳細を全部出力する（DevTools と端末）
-			console.error("Error fetching store addons (raw):", error);
-			console.dir(error);
-			try {
-				// Error オブジェクトの非列挙プロパティも含めて文字列化
-				const snap = JSON.stringify(error, Object.getOwnPropertyNames(error));
-				console.log("Error JSON snapshot:", snap);
-			} catch (e) {
-				console.warn("stringify error failed:", e);
-			}
-			await info(`get_store_addons error: ${String(error)}`);
+			console.error("Error fetching store addons:", error);
 		} finally {
-			setLoading(false);
+			setLoadingAddons(false);
 		}
 	}
 
 	return (
 		<div>
 			<h2>Debug View</h2>
-			<video
-				src="http://assets.localhost/tumugi/達成時.webm"
-				controls
-				width="300"
-			/>
-			<img src="http://assets.localhost/tumugi/thumbnail.png" alt="紬" />
 			<div style={{ display: "flex", gap: "8px", marginBottom: "16px" }}>
-				<button onClick={testLog}>
-					Test Log
-				</button><br></br>
-				<button onClick={getStoreInfo} disabled={loading}>
-					{loading ? "Loading..." : "Get Store App Info"}
-				</button><br></br>
-				<button onClick={getStoreAddons} disabled={loading}>
-					{loading ? "Loading..." : "Get Store AddOns"}
-				</button><br></br>
+				<button onClick={getStoreInfo} disabled={loadingInfo}>
+					{loadingInfo ? "Loading Info..." : "Get Store App Info"}
+				</button>
+				<button onClick={getStoreAddons} disabled={loadingAddons}>
+					{loadingAddons ? "Loading AddOns..." : "Get Store AddOns"}
+				</button>
 			</div>
-
-			{appInfo && (
-				<div style={{ textAlign: "left" }}>
-					<h3>Result:</h3>
-					<pre style={{
-						marginTop: 12,
-						padding: 8,
-						border: "1px solid #ccc",
-						borderRadius: 6,
-						backgroundColor: "#f5f5f5",
-						color: "#333",
-						overflowX: "auto"
-					}}>
+			{/* 結果を別々に表示 */}
+			<div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px" }}>
+				<div>
+					<h3>App Info:</h3>
+					<pre style={{ background: "#f5f5f5", padding: "8px" }}>
 						{JSON.stringify(appInfo, null, 2)}
 					</pre>
 				</div>
-			)}
+				<div>
+					<h3>Store AddOns:</h3>
+					<pre style={{ background: "#f5f5f5", padding: "8px" }}>
+						{JSON.stringify(addons, null, 2)}
+					</pre>
+				</div>
+			</div>
 		</div>
 	);
 };
