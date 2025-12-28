@@ -40,8 +40,8 @@ export const PlanView: React.FC = () => {
 	  	  	  return {
 	  	  	  	  display: "7",
 	  	  	  	  target: null,
-	  	  	  	  btnText: "最大アップグレード済み",
-	  	  	  	  btnColor: "bg-black",
+	  	  	  	  btnText: "購入不可",
+	  	  	  	  btnColor: "bg-gray-400",
 	  	  	  	  disabled: true,
 	  	  	  	  price: "---"
 	  	  	  };
